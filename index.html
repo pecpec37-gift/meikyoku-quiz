@@ -2,560 +2,1168 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🎵 昭和・平成 名曲クイズ道場</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>昭和・平成 名曲クイズ道場</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;700;900&family=Shippori+Mincho:wght@600;800&family=Noto+Sans+JP:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-<script src="https://pecpec37-gift.github.io/portal/stamp.js"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Yusei+Magic&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#0e0d14;--bg2:#15131d;--surface:#1e1b29;--surface2:#2a2538;
-  --border:rgba(167,139,250,0.20);
-  --red:#a0341f;--red2:#c0392b;--red3:#e8a99c;
-  --gold:#9a7b1f;--gold2:#c9a227;--gold3:#ecc94b;
-  --crimson:#d9533f;
-  --green:#3fae7a;--blue:#5aa9d6;
-  --purple:#a78bfa;--purple2:#c4b5fd;
-  --text:#f3f0fa;--text2:rgba(243,240,250,0.72);--text3:rgba(243,240,250,0.42);
-  --radius:8px;
-}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%;overflow-x:hidden;background:var(--bg);}
-body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;width:100%;max-width:100%;position:relative;}
-#bg-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;}
-body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 12% 8%,rgba(167,139,250,0.12) 0%,transparent 52%),radial-gradient(ellipse at 88% 92%,rgba(201,162,39,0.10) 0%,transparent 52%);pointer-events:none;z-index:0;}
-.screen{display:none;position:relative;z-index:1;}.screen.active{display:block;}
-#screen-top{min-height:100vh;}
-.top-hero{background:linear-gradient(160deg,#1a1626 0%,#0e0d14 55%,#08070c 100%);padding:52px 24px 44px;text-align:center;border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
-.top-hero::before{content:'♫';position:absolute;right:-6px;bottom:-50px;font-family:'Shippori Mincho',serif;font-size:230px;font-weight:800;opacity:0.05;pointer-events:none;color:var(--purple2);}
-.top-hero::after{content:'唄';position:absolute;left:8px;top:-6px;font-family:'Shippori Mincho',serif;font-size:140px;font-weight:800;opacity:0.05;pointer-events:none;color:var(--gold3);}
-.top-eyebrow{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.22em;color:var(--purple2);text-transform:uppercase;margin-bottom:12px;}
-.top-title{font-family:'Shippori Mincho',serif;font-weight:800;font-size:clamp(28px,6.2vw,54px);line-height:1.14;color:var(--text);margin-bottom:8px;letter-spacing:0.04em;}
-.top-title span{color:var(--gold3);}
-.top-sub{font-size:13px;color:var(--text2);letter-spacing:0.05em;margin-bottom:28px;line-height:1.7;}
-.top-rule{display:inline-block;background:rgba(167,139,250,0.07);border:1px solid rgba(167,139,250,0.22);border-radius:8px;padding:14px 20px;text-align:left;font-size:12px;line-height:2;color:var(--text2);}
-.top-rule strong{color:var(--gold3);}
-.genres-wrap{max-width:920px;margin:0 auto;padding:32px 20px 20px;}
-.genres-label{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:10px;}
-.genres-label::after{content:'';flex:1;height:1px;background:var(--border);}
-.genres-hint{font-size:12px;color:var(--gold3);background:rgba(201,162,39,0.08);border:1px solid rgba(201,162,39,0.22);border-radius:6px;padding:8px 14px;margin-bottom:20px;text-align:center;letter-spacing:0.04em;}
-.genres-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-bottom:24px;}
-.genre-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 18px;cursor:pointer;transition:transform 0.12s,box-shadow 0.12s,border-color 0.12s;position:relative;overflow:hidden;}
-.genre-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(167,139,250,0.08),transparent);opacity:0;transition:opacity 0.15s;}
-.genre-card:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,0,0,0.5),0 0 20px rgba(167,139,250,0.14);border-color:rgba(167,139,250,0.5);}
-.genre-card:hover::before{opacity:1;}
-.genre-accent{position:absolute;top:0;left:0;right:0;height:3px;border-radius:8px 8px 0 0;}
-.genre-icon{font-size:30px;line-height:1;margin-bottom:8px;display:block;}
-.genre-name{font-family:'Zen Kaku Gothic New',sans-serif;font-weight:900;font-size:16px;margin-bottom:4px;color:var(--text);}
-.genre-desc{font-size:11px;color:var(--text3);margin-bottom:4px;line-height:1.6;}
-.genre-count{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:0.1em;}
-.genre-start{position:absolute;top:14px;right:14px;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.1em;color:var(--purple2);opacity:0;transition:opacity 0.15s;}
-.genre-card:hover .genre-start{opacity:1;}
-.ranking-btn-wrap{text-align:center;padding:8px 0 36px;}
-.ranking-btn{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:0.12em;padding:10px 24px;background:none;border:1px solid var(--border);color:var(--text3);border-radius:4px;cursor:pointer;transition:all 0.15s;}
-.ranking-btn:hover{border-color:var(--gold3);color:var(--gold3);}
-#screen-intro{min-height:100vh;display:none;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;}
-#screen-intro.active{display:flex;}
-.intro-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:32px 28px;width:100%;max-width:420px;text-align:center;}
-.intro-icon{font-size:52px;margin-bottom:10px;display:block;}
-.intro-name{font-family:'Zen Kaku Gothic New',sans-serif;font-weight:900;font-size:24px;margin-bottom:4px;color:var(--gold3);}
-.intro-desc{font-size:12px;color:var(--text3);margin-bottom:20px;line-height:1.7;}
-.intro-rule{font-size:12px;line-height:1.9;color:var(--text2);text-align:left;background:rgba(167,139,250,0.06);border-radius:8px;padding:12px 14px;margin-bottom:20px;}
-.intro-rule strong{color:var(--gold3);}
-.name-label{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:6px;text-align:left;}
-.name-input{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-family:'Noto Sans JP',sans-serif;font-size:14px;margin-bottom:16px;outline:none;transition:border-color 0.15s;}
-.name-input:focus{border-color:var(--purple);}
-.name-input::placeholder{color:var(--text3);}
-.start-btn{width:100%;padding:14px;background:var(--purple);color:#1a1626;font-family:'Zen Kaku Gothic New',sans-serif;font-weight:900;font-size:16px;border:none;border-radius:8px;cursor:pointer;transition:background 0.15s,transform 0.1s;letter-spacing:0.04em;}
-.start-btn:hover{background:var(--purple2);}
-.start-btn:active{transform:scale(0.98);}
-.back-link{margin-top:14px;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text3);cursor:pointer;transition:color 0.15s;background:none;border:none;}
-.back-link:hover{color:var(--text);}
-#screen-quiz{min-height:100vh;}
-.quiz-header{background:var(--bg2);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;position:sticky;top:0;z-index:10;}
-.quiz-progress{flex:1;height:3px;background:rgba(167,139,250,0.15);border-radius:2px;overflow:hidden;min-width:30px;}
-.quiz-progress-fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--gold2));border-radius:2px;transition:width 0.3s;}
-.quiz-qnum{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text3);white-space:nowrap;letter-spacing:0.08em;}
-.quiz-score{font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--gold3);white-space:nowrap;}
-.quiz-timer-wrap{display:flex;align-items:center;gap:5px;}
-.quiz-timer{font-family:'Zen Kaku Gothic New',sans-serif;font-weight:900;font-size:22px;color:var(--gold3);min-width:40px;text-align:right;transition:color 0.3s;}
-.quiz-timer.danger{color:#e0524a;animation:pulse 0.5s infinite alternate;}
-@keyframes pulse{from{opacity:1;}to{opacity:0.5;}}
-.quiz-timer-label{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:0.1em;}
-.quiz-body{max-width:640px;margin:0 auto;padding:28px 20px 40px;width:100%;}
-#quiz-choices{max-width:100%;}
-.quiz-type-badge{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.16em;padding:3px 10px;border-radius:4px;display:inline-block;margin-bottom:14px;text-transform:uppercase;}
-.quiz-type-badge.type-4{background:rgba(167,139,250,0.16);color:var(--purple2);}
-.quiz-type-badge.type-ox{background:rgba(201,162,39,0.16);color:var(--gold3);}
-.quiz-q{font-family:'Zen Kaku Gothic New',sans-serif;font-weight:700;font-size:clamp(16px,4vw,20px);line-height:1.7;margin-bottom:22px;color:var(--text);max-width:100%;overflow-wrap:break-word;word-break:break-word;line-break:strict;}
-.quiz-q .song{font-family:'Shippori Mincho',serif;font-weight:800;color:var(--gold3);letter-spacing:0.06em;}
-.choices{display:flex;flex-direction:column;gap:10px;}
-.choice-btn{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;text-align:left;font-family:'Noto Sans JP',sans-serif;font-size:15px;color:var(--text);cursor:pointer;transition:all 0.12s;display:flex;align-items:center;gap:12px;width:100%;min-width:0;overflow-wrap:break-word;word-break:break-word;}
-.choice-btn:hover:not(:disabled){background:var(--surface2);border-color:rgba(167,139,250,0.5);transform:translateX(4px);}
-.choice-btn:disabled{cursor:default;}
-.choice-btn.correct{background:rgba(63,174,122,0.16);border-color:#3fae7a;color:#7ed3a8;}
-.choice-btn.wrong{background:rgba(224,82,74,0.14);border-color:#e0524a;color:#f0958e;}
-.choice-label{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text3);min-width:20px;}
-.ox-choices{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.ox-btn{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px 16px;font-size:38px;cursor:pointer;transition:all 0.12s;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;min-width:0;}
-.ox-btn span{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:0.1em;}
-.ox-btn:hover:not(:disabled){transform:scale(1.03);border-color:rgba(167,139,250,0.5);}
-.ox-btn:disabled{cursor:default;}
-.ox-btn.correct{background:rgba(63,174,122,0.16);border-color:#3fae7a;}
-.ox-btn.wrong{background:rgba(224,82,74,0.14);border-color:#e0524a;}
-.feedback-bar{margin-top:14px;padding:12px 16px;border-radius:8px;font-size:13px;font-weight:700;opacity:0;transition:opacity 0.2s;min-height:44px;}
-.feedback-bar.show{opacity:1;}
-.feedback-bar.ok{background:rgba(63,174,122,0.1);color:#7ed3a8;border:1px solid rgba(63,174,122,0.28);}
-.feedback-bar.ng{background:rgba(224,82,74,0.08);color:#f0958e;border:1px solid rgba(224,82,74,0.22);}
-.feedback-mean{display:block;margin-top:6px;font-weight:400;font-size:12px;color:var(--text2);line-height:1.6;}
-.next-btn{margin-top:14px;width:100%;padding:12px;background:var(--purple);color:#1a1626;font-family:'Zen Kaku Gothic New',sans-serif;font-weight:900;font-size:15px;border:none;border-radius:8px;cursor:pointer;transition:background 0.15s;display:none;}
-.next-btn.show{display:block;}
-.next-btn:hover{background:var(--purple2);}
-#screen-result{min-height:100vh;display:none;flex-direction:column;align-items:center;padding:40px 20px 60px;}
-#screen-result.active{display:flex;}
-.result-box{width:100%;max-width:520px;}
-.result-genre{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.2em;color:var(--text3);text-transform:uppercase;margin-bottom:8px;text-align:center;}
-.result-score-wrap{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:28px;text-align:center;margin-bottom:20px;}
-.result-medal{font-size:48px;margin-bottom:8px;display:block;}
-.result-score{font-family:'Zen Kaku Gothic New',sans-serif;font-weight:900;font-size:64px;line-height:1;color:var(--gold3);}
-.result-score-label{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--text3);margin-bottom:16px;text-transform:uppercase;}
-.result-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px;}
-.result-stat{background:var(--bg2);border-radius:8px;padding:12px 8px;text-align:center;}
-.result-stat-val{font-family:'Zen Kaku Gothic New',sans-serif;font-weight:900;font-size:24px;color:var(--gold3);}
-.result-stat-val.green{color:#7ed3a8;}
-.result-stat-val.gold{color:var(--gold3);}
-.result-stat-label{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.1em;color:var(--text3);margin-top:2px;}
-.result-actions{display:flex;gap:10px;margin-bottom:24px;}
-.result-btn{flex:1;padding:12px;font-family:'Zen Kaku Gothic New',sans-serif;font-weight:700;font-size:14px;border-radius:8px;cursor:pointer;transition:all 0.15s;}
-.result-btn-primary{background:var(--purple);color:#1a1626;border:none;}
-.result-btn-primary:hover{background:var(--purple2);}
-.result-btn-secondary{background:none;color:var(--text2);border:1px solid var(--border);}
-.result-btn-secondary:hover{border-color:var(--gold2);color:var(--gold2);}
-.wrong-section{width:100%;max-width:520px;}
-.wrong-label{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.18em;color:var(--text3);text-transform:uppercase;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border);}
-.wrong-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:10px;}
-.wrong-item-num{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.14em;color:var(--text3);margin-bottom:6px;}
-.wrong-item-q{font-size:14px;line-height:1.6;color:var(--text);margin-bottom:10px;font-weight:700;}
-.wrong-item-q .song{font-family:'Shippori Mincho',serif;color:var(--gold3);letter-spacing:0.06em;}
-.wrong-item-ans{display:flex;align-items:flex-start;gap:8px;font-size:13px;}
-.wrong-item-ans-label{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--green);background:rgba(63,174,122,0.1);padding:2px 7px;border-radius:3px;white-space:nowrap;margin-top:1px;}
-.wrong-item-ans-text{color:#7ed3a8;line-height:1.5;}
-.wrong-item-mean{margin-top:8px;font-size:12px;color:var(--text2);line-height:1.6;border-left:2px solid var(--border);padding-left:10px;}
-.portal-back{display:block;text-align:center;margin-top:28px;font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:0.1em;color:var(--text3);text-decoration:none;padding:10px 20px;border:1px solid var(--border);border-radius:4px;transition:all 0.15s;}
-.portal-back:hover{border-color:var(--gold2);color:var(--gold2);}
-#screen-ranking{min-height:100vh;padding:40px 20px 60px;}
-.ranking-wrap{max-width:600px;margin:0 auto;}
-.ranking-top{display:flex;align-items:center;gap:12px;margin-bottom:24px;}
-.ranking-title{font-family:'Zen Kaku Gothic New',sans-serif;font-weight:900;font-size:22px;color:var(--gold3);flex:1;}
-.ranking-back{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text3);background:none;border:1px solid var(--border);border-radius:4px;padding:6px 14px;cursor:pointer;transition:all 0.15s;}
-.ranking-back:hover{border-color:var(--gold3);color:var(--gold3);}
-.ranking-tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;margin-bottom:20px;border-bottom:1px solid var(--border);}
-.ranking-tabs::-webkit-scrollbar{display:none;}
-.ranking-tab{flex-shrink:0;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.1em;padding:10px 12px;background:none;border:none;border-bottom:2px solid transparent;color:var(--text3);cursor:pointer;transition:all 0.15s;white-space:nowrap;}
-.ranking-tab.active{color:var(--purple2);border-bottom-color:var(--purple);}
-.ranking-list{display:flex;flex-direction:column;gap:6px;}
-.ranking-empty{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text3);text-align:center;padding:32px;letter-spacing:0.1em;}
-.ranking-row{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 16px;}
-.ranking-row.top1{border-color:rgba(201,162,39,0.5);background:rgba(201,162,39,0.05);}
-.ranking-row.top2{border-color:rgba(200,200,200,0.25);}
-.ranking-row.top3{border-color:rgba(180,100,30,0.3);}
-.ranking-pos{font-family:'Zen Kaku Gothic New',sans-serif;font-weight:900;font-size:18px;min-width:28px;color:var(--text3);}
-.ranking-pos.gold{color:#c9a227;}.ranking-pos.silver{color:#9ca3af;}.ranking-pos.bronze{color:#b45309;}
-.ranking-name{flex:1;font-size:14px;font-weight:700;color:var(--text);}
-.ranking-score{font-family:'Zen Kaku Gothic New',sans-serif;font-weight:900;font-size:20px;color:var(--gold3);}
-.ranking-date{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text3);margin-left:6px;}
-.ranking-del{font-size:11px;color:var(--text3);background:none;border:none;cursor:pointer;padding:4px 8px;margin-top:12px;font-family:'Share Tech Mono',monospace;letter-spacing:0.08em;transition:color 0.15s;}
-.ranking-del:hover{color:#e0524a;}
-#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--bg2);color:var(--gold3);font-family:'Share Tech Mono',monospace;font-size:12px;padding:10px 20px;border-radius:8px;border:1px solid var(--gold2);z-index:9999;opacity:0;transition:all 0.3s;pointer-events:none;white-space:nowrap;}
-#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-.portal-fixed-btn{position:fixed;bottom:20px;left:20px;z-index:9999;display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:rgba(14,13,20,0.92);color:var(--gold3);font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:0.08em;border-radius:6px;border:1px solid rgba(201,162,39,0.35);text-decoration:none;backdrop-filter:blur(6px);box-shadow:0 4px 16px rgba(0,0,0,0.5);transition:all 0.15s;white-space:nowrap;}
-.portal-fixed-btn:hover{background:rgba(14,13,20,0.98);border-color:rgba(201,162,39,0.7);transform:translateY(-1px);}
-@media(max-width:480px){.genres-grid{grid-template-columns:1fr 1fr;}.result-actions{flex-direction:column;}.portal-fixed-btn{bottom:14px;left:14px;padding:8px 14px;font-size:11px;}.quiz-header{padding:12px 14px;gap:10px;}.quiz-body{padding:24px 16px 40px;}.quiz-timer{font-size:20px;}}
-@media(max-width:360px){.genres-grid{grid-template-columns:1fr;}.ox-btn{padding:22px 10px;font-size:32px;}.quiz-header{gap:8px;}}
+  :root{
+    --bg:#120c24;
+    --bg2:#1b1338;
+    --bg3:#251a4a;
+    --red:#ff4d8d;
+    --red-soft:#ff95ba;
+    --red-deep:#c92f6b;
+    --gold:#ffd166;
+    --gold-soft:#ffe6a8;
+    --white:#f4f1fb;
+    --dim:#b7add0;
+    --green:#34d8a6;
+    --shadow:rgba(0,0,0,.5);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;height:100%;}
+  body{
+    font-family:'Noto Sans JP',sans-serif;
+    background:radial-gradient(120% 80% at 50% -10%,#3a1556 0%,var(--bg) 62%);
+    color:var(--white);
+    min-height:100dvh;
+    overflow-x:hidden;
+    position:relative;
+  }
+  #bgCanvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;opacity:.85;pointer-events:none;}
+  .wrap{
+    position:relative;z-index:1;
+    max-width:680px;margin:0 auto;
+    padding:clamp(12px,3.5vw,28px) clamp(12px,4vw,24px) 48px;
+    min-height:100dvh;
+  }
+  .screen{display:none;animation:fade .35s ease;}
+  .screen.active{display:block;}
+  @keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+  /* ===== Header / Title ===== */
+  .crest{text-align:center;margin-bottom:clamp(14px,3vw,22px);}
+  .crest .seal{
+    display:inline-block;font-size:clamp(11px,2.8vw,13px);letter-spacing:.22em;
+    color:var(--red-soft);border:1px solid var(--red);border-radius:30px;
+    padding:5px 16px;margin-bottom:16px;background:rgba(255,0,51,.08);
+    box-shadow:0 0 14px rgba(255,0,51,.25);font-weight:700;
+  }
+  h1{
+    font-family:'Dela Gothic One',sans-serif;
+    font-size:clamp(30px,9.5vw,56px);font-weight:400;margin:0;line-height:1.1;letter-spacing:.005em;
+    color:var(--white);
+    text-shadow:0 0 22px rgba(255,0,51,.45),0 0 40px rgba(255,206,58,.12);
+  }
+  h1 .yt{color:var(--red);text-shadow:0 0 18px rgba(255,0,51,.7);}
+  h1 .dojo{color:var(--gold);text-shadow:0 0 18px rgba(255,206,58,.6);}
+  .subtitle{margin-top:14px;color:var(--dim);font-size:clamp(13px,3.4vw,16px);letter-spacing:.04em;line-height:1.6;}
+  .datenote{
+    display:inline-block;margin-top:12px;font-size:clamp(11px,3vw,13px);font-weight:700;
+    color:var(--gold-soft);background:rgba(255,206,58,.08);border:1px solid rgba(255,206,58,.3);
+    border-radius:30px;padding:6px 15px;letter-spacing:.03em;
+  }
+
+  .howto{
+    background:linear-gradient(160deg,var(--bg2),var(--bg3));
+    border:1px solid rgba(255,0,51,.28);border-radius:16px;
+    padding:clamp(14px,3.5vw,20px);margin:clamp(16px,4vw,26px) 0;
+    box-shadow:0 6px 22px var(--shadow);
+  }
+  .howto h3{margin:0 0 10px;color:var(--red-soft);font-size:clamp(15px,3.8vw,17px);font-weight:900;letter-spacing:.04em;}
+  .howto ul{margin:0;padding-left:1.2em;line-height:1.9;font-size:clamp(13px,3.4vw,15px);color:#ece6e9;}
+  .howto ul b{color:var(--gold-soft);}
+  .howto .tap-hint{
+    margin-top:14px;text-align:center;font-weight:700;color:var(--red-soft);
+    font-size:clamp(15px,4vw,18px);letter-spacing:.03em;font-family:'Yusei Magic',sans-serif;
+  }
+  .howto .tap-hint span{display:inline-block;animation:pulse 1.5s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{transform:scale(1);opacity:.9;}50%{transform:scale(1.07);opacity:1;}}
+
+  .section-label{
+    text-align:center;color:var(--red-soft);font-size:clamp(13px,3.4vw,15px);
+    letter-spacing:.2em;margin:6px 0 14px;font-weight:700;
+  }
+  .section-label::before,.section-label::after{content:"—　";color:rgba(255,0,51,.5);}
+  .section-label::after{content:"　—";}
+
+  /* ===== Genre cards ===== */
+  .genres{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(10px,2.6vw,14px);}
+  .gcard{
+    background:linear-gradient(155deg,#27141b,#1a0f14);
+    border:1px solid rgba(255,0,51,.28);border-radius:16px;
+    padding:clamp(16px,4vw,22px) clamp(10px,3vw,16px) clamp(22px,4.6vw,26px);
+    cursor:pointer;text-align:center;position:relative;overflow:hidden;
+    transition:transform .15s ease,border-color .2s ease,box-shadow .2s ease;
+  }
+  .gcard:active{transform:scale(.97);}
+  .gcard:hover{border-color:var(--red);box-shadow:0 8px 24px var(--shadow),0 0 0 1px rgba(255,0,51,.25) inset;}
+  .gcard .ji{font-size:clamp(32px,9.5vw,46px);line-height:1;filter:drop-shadow(0 2px 10px rgba(255,0,51,.35));}
+  .gcard .nm{margin-top:8px;font-weight:900;font-size:clamp(13px,3.7vw,16px);color:var(--white);}
+  .gcard .ct{margin-top:4px;font-size:11px;color:var(--dim);}
+  .gcard::after{content:"クリックで即スタート";position:absolute;left:0;right:0;bottom:7px;font-size:10px;color:var(--red-soft);opacity:.9;letter-spacing:.04em;}
+
+  .footer-row{display:flex;justify-content:center;margin-top:26px;}
+  .btn{
+    font-family:'Noto Sans JP',sans-serif;font-weight:700;cursor:pointer;border:none;
+    border-radius:11px;padding:13px 22px;font-size:15px;transition:transform .12s ease,filter .2s ease;
+  }
+  .btn:active{transform:scale(.96);}
+  .btn-ghost{background:transparent;border:1px solid var(--dim);color:var(--dim);}
+  .btn-ghost:hover{border-color:var(--red-soft);color:var(--red-soft);}
+  .btn-gold{background:linear-gradient(135deg,var(--gold),#e0a91f);color:#2a1f04;box-shadow:0 5px 18px rgba(255,206,58,.32);}
+  .btn-crimson{background:linear-gradient(135deg,var(--red),var(--red-deep));color:#fff;box-shadow:0 5px 18px rgba(255,0,51,.38);}
+  .btn-block{width:100%;}
+
+  /* ===== Modal ===== */
+  .modal-bg{
+    position:fixed;inset:0;z-index:50;background:rgba(6,4,6,.8);
+    display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(3px);
+  }
+  .modal-bg.show{display:flex;animation:fade .25s ease;}
+  .modal{
+    background:linear-gradient(160deg,var(--bg2),var(--bg3));
+    border:1px solid var(--red);border-radius:20px;max-width:380px;width:100%;
+    padding:26px 22px;text-align:center;box-shadow:0 18px 54px rgba(0,0,0,.65);
+  }
+  .modal .ji{font-size:56px;line-height:1;}
+  .modal h2{margin:10px 0 4px;font-size:22px;font-weight:900;}
+  .modal p{margin:6px 0 0;color:var(--dim);font-size:14px;line-height:1.7;}
+  .modal .rules{margin:16px 0 20px;font-size:13px;color:#ece6e9;line-height:1.85;background:rgba(0,0,0,.22);border-radius:10px;padding:12px;}
+  .modal-btns{display:flex;gap:10px;}
+  .modal-btns .btn{flex:1;}
+
+  /* ===== Quiz ===== */
+  .hud{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:10px;}
+  .hud .pill{
+    background:rgba(0,0,0,.32);border:1px solid rgba(255,0,51,.3);border-radius:30px;
+    padding:8px 16px;font-weight:700;font-size:clamp(13px,3.6vw,15px);
+  }
+  .hud .pill .lab{color:var(--dim);font-size:11px;margin-right:6px;font-weight:500;}
+  .hud .score-pill{color:var(--gold);}
+  .hud .time-pill{color:var(--white);}
+  .hud .time-pill.warn{color:var(--red-soft);animation:blink .8s steps(2,end) infinite;}
+  @keyframes blink{50%{opacity:.4;}}
+  .timebar{height:6px;border-radius:6px;background:rgba(255,255,255,.08);overflow:hidden;margin-bottom:6px;}
+  .timebar .fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--red-soft),var(--red));width:100%;transition:width 1s linear;}
+  .progress{text-align:center;font-size:12px;color:var(--dim);margin-bottom:14px;letter-spacing:.1em;}
+
+  .qcard{
+    background:linear-gradient(160deg,var(--bg2),var(--bg3));
+    border:1px solid rgba(255,0,51,.25);border-radius:18px;
+    padding:clamp(18px,5vw,30px) clamp(16px,4.5vw,26px);box-shadow:0 8px 28px var(--shadow);
+    min-height:230px;display:flex;flex-direction:column;
+  }
+  .qtag{
+    display:inline-block;font-size:11px;letter-spacing:.12em;color:var(--red-soft);
+    border:1px solid rgba(255,0,51,.4);border-radius:30px;padding:3px 12px;margin-bottom:14px;font-weight:700;
+  }
+  .qtype{float:right;font-size:11px;color:var(--dim);margin-top:4px;}
+  .qtext{
+    font-size:clamp(17px,4.8vw,22px);font-weight:700;line-height:1.7;margin-bottom:4px;
+    min-height:2.4em;transition:opacity .3s ease;
+  }
+  .qtext::after{content:"▌";color:var(--red);animation:caret 1s steps(2,end) infinite;margin-left:2px;}
+  .qtext.done::after,.qtext.fade-out::after{content:"";}
+  @keyframes caret{50%{opacity:0;}}
+  .qtext.fade-out{opacity:0;}
+
+  /* buzzer */
+  .buzz-wrap{margin-top:auto;padding-top:20px;text-align:center;}
+  .btn-buzz{
+    font-family:'Dela Gothic One',sans-serif;font-size:clamp(20px,6vw,26px);font-weight:400;
+    color:#fff;background:radial-gradient(circle at 50% 35%,#ff3a5e,var(--red) 55%,var(--red-deep));
+    border:none;border-radius:50%;width:clamp(130px,38vw,150px);height:clamp(130px,38vw,150px);
+    cursor:pointer;box-shadow:0 8px 26px rgba(255,0,51,.5),inset 0 -6px 14px rgba(0,0,0,.3),inset 0 4px 10px rgba(255,255,255,.25);
+    transition:transform .1s ease;letter-spacing:.02em;line-height:1.25;animation:buzzpulse 1.6s ease-in-out infinite;
+  }
+  .btn-buzz:active{transform:scale(.92);}
+  @keyframes buzzpulse{0%,100%{box-shadow:0 8px 26px rgba(255,0,51,.45),inset 0 -6px 14px rgba(0,0,0,.3),inset 0 4px 10px rgba(255,255,255,.25);}50%{box-shadow:0 8px 38px rgba(255,0,51,.85),inset 0 -6px 14px rgba(0,0,0,.3),inset 0 4px 10px rgba(255,255,255,.25);}}
+  .buzz-hint{margin-top:12px;font-size:12px;color:var(--dim);letter-spacing:.05em;}
+
+  .choices{display:none;gap:10px;margin-top:20px;}
+  .choices.show{display:grid;animation:fade .3s ease;}
+  .choices.ox{grid-template-columns:1fr 1fr;}
+  .choice{
+    font-family:'Noto Sans JP',sans-serif;font-size:clamp(15px,4.2vw,18px);font-weight:600;
+    background:#211118;border:1.5px solid rgba(255,0,51,.26);color:var(--white);
+    border-radius:13px;padding:15px 16px;cursor:pointer;text-align:center;
+    transition:transform .12s ease,background .2s ease,border-color .2s ease;min-height:54px;
+    display:flex;align-items:center;justify-content:center;line-height:1.4;
+  }
+  .choice:active{transform:scale(.97);}
+  .choice:focus{outline:none;}
+  .choice:focus-visible{outline:none;}
+  @media (hover:hover) and (pointer:fine){
+    .choice:hover{border-color:var(--red);}
+  }
+  .choice.ox-mark{font-size:clamp(28px,9vw,38px);font-weight:800;}
+  .choice.correct{background:linear-gradient(135deg,#2f9a64,#23744c);border-color:var(--green);color:#fff;}
+  .choice.wrong{background:linear-gradient(135deg,var(--red-deep),#8e0f2a);border-color:var(--red);color:#fff;}
+  .choice.dim{opacity:.4;}
+  .choice[disabled]{cursor:default;}
+
+  /* result overlay (正誤オーバーレイ) */
+  .result-overlay{
+    position:fixed;inset:0;z-index:55;background:rgba(6,4,6,.82);
+    display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);
+  }
+  .result-overlay.show{display:flex;animation:fade .25s ease;}
+  .ro-card{
+    background:linear-gradient(160deg,var(--bg2),var(--bg3));border-radius:22px;
+    max-width:420px;width:100%;padding:28px 24px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.7);
+    border:1px solid rgba(255,255,255,.08);
+  }
+  .ro-card.ok{border-color:var(--green);}
+  .ro-card.ng{border-color:var(--red);}
+  .ro-mark{font-size:64px;line-height:1;}
+  .ro-card.ok .ro-mark{color:var(--green);text-shadow:0 0 24px rgba(63,207,134,.5);}
+  .ro-card.ng .ro-mark{color:var(--red);text-shadow:0 0 24px rgba(255,0,51,.5);}
+  .ro-head{font-size:24px;font-weight:900;margin:8px 0 2px;}
+  .ro-card.ok .ro-head{color:var(--green);}
+  .ro-card.ng .ro-head{color:var(--red-soft);}
+  .ro-ans{margin:14px 0 0;font-size:14px;color:var(--dim);}
+  .ro-ans b{display:block;margin-top:4px;font-size:17px;color:var(--gold-soft);font-weight:700;line-height:1.5;}
+  .ro-explain{margin-top:14px;padding:13px 15px;background:rgba(255,206,58,.08);border-left:3px solid var(--gold);border-radius:9px;font-size:13px;line-height:1.8;color:#efe6d3;text-align:left;}
+  .ro-card .btn{margin-top:20px;width:100%;}
+
+  /* feedback toast */
+  .toast{
+    position:fixed;left:50%;bottom:30px;transform:translateX(-50%) translateY(20px);
+    z-index:60;background:rgba(12,8,12,.96);border:1px solid var(--gold);
+    border-radius:14px;padding:14px 22px;max-width:90%;text-align:center;
+    box-shadow:0 10px 32px rgba(0,0,0,.55);
+    opacity:0;pointer-events:none;transition:opacity .25s ease,transform .25s ease;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  .toast .big{font-size:18px;font-weight:900;}
+  .toast.ok .big{color:var(--green);}
+  .toast.ng .big{color:var(--red-soft);}
+  .toast .small{font-size:13px;color:#ece6e9;margin-top:4px;line-height:1.5;}
+
+  /* ===== Result ===== */
+  .result-card{
+    background:linear-gradient(160deg,var(--bg2),var(--bg3));
+    border:1px solid var(--gold);border-radius:20px;padding:28px 22px;text-align:center;
+    box-shadow:0 10px 34px var(--shadow);
+  }
+  .result-card .trophy{font-size:48px;}
+  .result-card h2{margin:8px 0 2px;font-size:24px;font-weight:900;}
+  .result-card .genre-name{color:var(--gold);font-size:15px;}
+  .score-break{margin:20px 0;display:grid;gap:8px;font-size:14px;}
+  .score-break .row{display:flex;justify-content:space-between;padding:9px 14px;background:rgba(0,0,0,.26);border-radius:9px;}
+  .score-break .row .v{font-weight:700;color:var(--gold);}
+  .total-score{font-size:46px;font-weight:900;color:var(--gold);margin:6px 0;text-shadow:0 0 18px rgba(255,206,58,.4);}
+  .total-score small{font-size:18px;color:var(--dim);}
+  .rank-badge{display:inline-block;padding:7px 20px;border-radius:30px;font-weight:900;margin-top:6px;font-size:15px;}
+
+  .name-entry{margin:18px 0;}
+  .name-entry input{
+    font-family:'Noto Sans JP',sans-serif;font-size:16px;padding:11px 14px;border-radius:11px;
+    border:1.5px solid rgba(255,206,58,.4);background:#211118;color:var(--white);width:100%;text-align:center;
+  }
+  .name-entry input:focus{outline:none;border-color:var(--gold);}
+  .result-actions{display:grid;gap:10px;margin-top:18px;}
+
+  /* ===== Review ===== */
+  .review-card{
+    background:linear-gradient(160deg,var(--bg2),var(--bg3));
+    border:1px solid rgba(255,0,51,.42);border-radius:18px;padding:22px 20px;box-shadow:0 8px 28px var(--shadow);
+  }
+  .review-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+  .review-head .ttl{color:var(--red-soft);font-weight:900;font-size:16px;}
+  .review-head .count{font-size:13px;color:var(--dim);}
+  .review-q{font-size:clamp(16px,4.4vw,20px);font-weight:700;line-height:1.6;margin-bottom:14px;}
+  .ans-line{padding:11px 14px;border-radius:11px;margin-bottom:8px;font-size:14px;line-height:1.6;}
+  .ans-line.yours{background:rgba(255,0,51,.15);border:1px solid rgba(255,0,51,.4);}
+  .ans-line.right{background:rgba(63,207,134,.13);border:1px solid rgba(63,207,134,.45);}
+  .ans-line .lab{font-size:11px;color:var(--dim);display:block;margin-bottom:2px;}
+  .ans-line.yours .val{color:var(--red-soft);font-weight:700;}
+  .ans-line.right .val{color:#7fe6ad;font-weight:700;}
+  .explain{margin-top:12px;padding:13px 15px;background:rgba(255,206,58,.08);border-left:3px solid var(--gold);border-radius:9px;font-size:13px;line-height:1.8;color:#efe6d3;}
+  .review-nav{display:flex;justify-content:space-between;gap:10px;margin-top:18px;}
+  .review-nav .btn{flex:1;}
+  .perfect-msg{text-align:center;padding:30px 10px;color:var(--gold);font-size:18px;line-height:1.7;font-weight:700;}
+
+  /* ===== Ranking ===== */
+  .rank-tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;}
+  .rank-tabs .tab{
+    flex:1;min-width:90px;font-size:12px;font-weight:700;
+    padding:8px 6px;border-radius:9px;border:1px solid rgba(255,0,51,.3);background:#211118;
+    color:var(--dim);cursor:pointer;text-align:center;transition:all .2s ease;
+  }
+  .rank-tabs .tab.active{background:linear-gradient(135deg,var(--gold),#e0a91f);color:#2a1f04;border-color:var(--gold);}
+  .rank-list{list-style:none;margin:0;padding:0;}
+  .rank-list li{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:11px;background:rgba(0,0,0,.24);margin-bottom:7px;}
+  .rank-list li .pos{font-weight:900;width:28px;text-align:center;color:var(--dim);font-size:15px;}
+  .rank-list li.top1 .pos{color:#ffd24a;}.rank-list li.top2 .pos{color:#d8d8d8;}.rank-list li.top3 .pos{color:#e08a4f;}
+  .rank-list li .nm{flex:1;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .rank-list li .dt{font-size:11px;color:var(--dim);}
+  .rank-list li .sc{font-weight:900;color:var(--gold);}
+  .rank-empty{text-align:center;color:var(--dim);padding:34px 10px;font-size:14px;line-height:1.7;}
+
+  .back-portal{position:fixed;top:12px;left:12px;z-index:40;}
+  .back-portal a{
+    display:inline-flex;align-items:center;gap:6px;
+    font-size:12px;font-weight:700;text-decoration:none;color:var(--dim);
+    background:rgba(11,10,12,.85);border:1px solid rgba(255,0,51,.35);border-radius:30px;padding:7px 14px;
+    transition:all .2s ease;backdrop-filter:blur(4px);
+  }
+  .back-portal a:hover{color:var(--red-soft);border-color:var(--red);}
+
+  .top-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px;}
+
+  @media(max-width:360px){
+    .hud .pill{padding:7px 11px;}
+  }
 </style>
 </head>
 <body>
-<canvas id="bg-canvas"></canvas>
-<div id="screen-top" class="screen active">
-  <div class="top-hero">
-    <div class="top-eyebrow">Tommy's Quiz Dojo</div>
-    <h1 class="top-title">昭和・平成<span> 名曲</span>クイズ道場</h1>
-    <p class="top-sub">あの頃の名曲を、歌手・発売年・ドラマ主題歌・受賞エピソードで楽しく振り返ろう！<br>（歌詞は使いません。曲にまつわる“知識”で勝負）</p>
-    <div class="top-rule">📋 制限時間：<strong>120秒</strong> ／ 各ジャンル<strong>10問</strong>ランダム出題<br>✅ 正解 → <strong>+10点</strong> ＋ 時間+5秒<br>❌ 不正解 → 減点なし ＋ 時間−5秒のペナルティ<br>🏆 残り時間がそのままボーナス点に加算！<br>👆 ジャンルカードをクリックで<strong>即スタート</strong>（名前入力は任意）<br>【4択】と【○×】がランダムにミックスされます</div>
-  </div>
-  <div class="genres-wrap">
-    <div class="genres-label">// ジャンルを選んでクリック → 即スタート</div>
-    <div class="genres-hint">👆 カードをクリックするとすぐに始められます（次の画面でスタートを押すだけ）</div>
-    <div class="genres-grid" id="genres-grid"></div>
-    <div class="ranking-btn-wrap"><button class="ranking-btn" onclick="showRanking()">🏆 スコアランキングを見る</button></div>
-  </div>
+<canvas id="bgCanvas"></canvas>
+
+<div class="back-portal">
+  <a href="https://pecpec37-gift.github.io/portal/">‹ ポータルサイトに戻る</a>
 </div>
-<div id="screen-intro" class="screen">
-  <div class="intro-box">
-    <span class="intro-icon" id="intro-icon"></span>
-    <div class="intro-name" id="intro-name"></div>
-    <div class="intro-desc" id="intro-desc"></div>
-    <div class="intro-rule">制限時間：<strong>120秒</strong> ／ 10問ランダム出題（4択＋○×ミックス）<br>✅ 正解 → <strong>+10点</strong> ＋ 時間+5秒<br>❌ 不正解 → 減点なし ＋ 時間−5秒<br>🏆 残り時間がそのままボーナス点に加算</div>
-    <div class="name-label">// Your Name（ランキングに表示）</div>
-    <input class="name-input" id="name-input" type="text" maxlength="20" placeholder="プレーヤー名（任意）">
-    <button class="start-btn" onclick="startGame()">スタート ▶</button>
-    <button class="back-link" onclick="showScreen('screen-top')">← 戻る</button>
-  </div>
-</div>
-<div id="screen-quiz" class="screen">
-  <div class="quiz-header">
-    <div class="quiz-qnum" id="quiz-qnum">Q1 / 10</div>
-    <div class="quiz-progress"><div class="quiz-progress-fill" id="quiz-progress-fill" style="width:0%"></div></div>
-    <div class="quiz-score" id="quiz-score">0 pt</div>
-    <div class="quiz-timer-wrap"><div class="quiz-timer" id="quiz-timer">120</div><div class="quiz-timer-label">秒</div></div>
-  </div>
-  <div class="quiz-body">
-    <div class="quiz-type-badge" id="quiz-type-badge">4択</div>
-    <div class="quiz-q" id="quiz-q"></div>
-    <div id="quiz-choices"></div>
-    <div class="feedback-bar" id="feedback-bar"></div>
-    <button class="next-btn" id="next-btn" onclick="nextQuestion()">次の問題へ →</button>
-  </div>
-</div>
-<div id="screen-result" class="screen">
-  <div class="result-box">
-    <div class="result-genre" id="result-genre"></div>
-    <div class="result-score-wrap">
-      <span class="result-medal" id="result-medal">🏆</span>
-      <div class="result-score" id="result-score">0</div>
-      <div class="result-score-label">TOTAL SCORE</div>
-      <div class="result-stats">
-        <div class="result-stat"><div class="result-stat-val green" id="result-correct">0</div><div class="result-stat-label">正解数</div></div>
-        <div class="result-stat"><div class="result-stat-val" id="result-wrong">0</div><div class="result-stat-label">不正解数</div></div>
-        <div class="result-stat"><div class="result-stat-val gold" id="result-bonus">+0</div><div class="result-stat-label">時間ボーナス</div></div>
+
+<div class="wrap">
+
+  <!-- ============ TITLE ============ -->
+  <section id="screen-title" class="screen active">
+    <div class="crest" style="margin-top:40px;">
+      <div class="seal">早押しクイズ道場 シリーズ</div>
+      <h1><span class="yt">昭和・平成 名曲</span><br>クイズ<span class="dojo">道場</span></h1>
+      <div class="subtitle">SHOWA &amp; HEISEI HITS<br>フォーク・歌謡曲・80年代ポップス・J-POP黄金期まで、<br>懐かしの名曲を早押しクイズで楽しもう。</div>
+      <div class="datenote">🎵 昭和〜平成の名曲・歌手・エピソードを出題</div>
+    </div>
+
+    <div class="howto">
+      <h3>遊び方</h3>
+      <ul>
+        <li>ジャンル別に <b>ランダム10問</b> を出題（4択 ＋ ○× ミックス）</li>
+        <li>問題が流れたら <b>「回答する！」</b> → 4つの選択肢が出現！</li>
+        <li>制限時間は <b>60秒</b>。残った時間はそのまま <b>ボーナス点</b> に！</li>
+        <li>正解 → <b>+10点 ＆ 時間+5秒</b>（「✅ 正解！ +5秒」）</li>
+        <li>不正解 → <b>減点なし・時間−5秒</b>（正解を表示）</li>
+        <li>終了後は <b>間違えた問題を1問ずつ復習</b> できます</li>
+        <li>正解率 <b>90%以上で🌸花丸スタンプ</b>（ポータルのランキングに反映）</li>
+        <li>スコアは端末内ランキングに記録（ローカル保存・共有なし）</li>
+      </ul>
+      <div class="tap-hint"><span>▶ ジャンルをクリックで即スタート！</span></div>
+    </div>
+
+    <div class="section-label">ジャンルを選ぶ</div>
+    <div class="genres" id="genreGrid"></div>
+
+    <div class="top-actions">
+      <button class="btn btn-ghost" onclick="showRanking()">🏆 ランキング</button>
+      <button class="btn btn-ghost" onclick="randomGenre()">🎲 おまかせ出題</button>
+    </div>
+  </section>
+
+  <!-- ============ QUIZ ============ -->
+  <section id="screen-quiz" class="screen">
+    <div class="hud">
+      <div class="pill score-pill"><span class="lab">得点</span><span id="hudScore">0</span></div>
+      <div class="pill time-pill" id="timePill"><span class="lab">残り</span><span id="hudTime">60</span>秒</div>
+    </div>
+    <div class="timebar"><div class="fill" id="timeFill"></div></div>
+    <div class="progress" id="progress">第 1 問 / 10</div>
+
+    <div class="qcard">
+      <span class="qtag" id="qTag">ジャンル</span>
+      <span class="qtype" id="qType">4択</span>
+      <div class="qtext" id="qText"></div>
+      <div class="buzz-wrap" id="buzzWrap">
+        <button class="btn-buzz" onclick="buzz()">回答<br>する！</button>
+        <div class="buzz-hint">押すと選択肢が出ます</div>
+      </div>
+      <div class="choices" id="choices"></div>
+    </div>
+
+    <div class="footer-row">
+      <button class="btn btn-ghost" onclick="quitGame()">やめる</button>
+    </div>
+  </section>
+
+  <!-- ============ RESULT ============ -->
+  <section id="screen-result" class="screen">
+    <div class="result-card">
+      <div class="trophy">🏆</div>
+      <h2>結果発表</h2>
+      <div class="genre-name" id="resGenre">ジャンル</div>
+
+      <div class="total-score"><span id="resTotal">0</span><small> 点</small></div>
+      <div class="rank-badge" id="resBadge">—</div>
+
+      <div class="hanamaru" id="hanamaru" style="display:none;margin:16px auto 4px;padding:13px 16px;border-radius:16px;max-width:340px;background:linear-gradient(135deg,rgba(255,206,58,.2),rgba(255,0,51,.16));border:1.5px solid rgba(255,206,58,.6);">
+        <div style="font-size:30px;line-height:1;">🌸</div>
+        <div style="font-weight:900;color:var(--gold-soft);margin-top:4px;letter-spacing:.03em;">花丸スタンプ獲得！</div>
+        <div style="font-size:12px;color:var(--dim);margin-top:3px;">正解率90%以上達成　ポータルのランキングに反映されます</div>
+      </div>
+
+      <div class="score-break">
+        <div class="row"><span>正解数</span><span class="v"><span id="resCorrect">0</span> / 10 問</span></div>
+        <div class="row"><span>基礎点（正解×10）</span><span class="v"><span id="resBase">0</span> 点</span></div>
+        <div class="row"><span>残り時間ボーナス</span><span class="v">+ <span id="resBonus">0</span> 点</span></div>
+      </div>
+
+      <div class="name-entry" id="nameEntry">
+        <input type="text" id="playerName" placeholder="花丸ランキング用の名前（任意）" maxlength="12">
+      </div>
+
+      <div class="result-actions">
+        <button class="btn btn-gold btn-block" id="saveBtn" onclick="saveScore()">📥 ランキングに登録</button>
+        <button class="btn btn-crimson btn-block" id="reviewBtn" onclick="showReview()">📖 間違えた問題を復習</button>
+        <button class="btn btn-ghost btn-block" onclick="retrySame()">🔁 同じジャンルに再挑戦</button>
+        <button class="btn btn-ghost btn-block" onclick="goTitle()">🏠 トップへ戻る</button>
       </div>
     </div>
-    <div class="result-actions">
-      <button class="result-btn result-btn-primary" onclick="retryGame()">もう一度挑戦</button>
-      <button class="result-btn result-btn-secondary" onclick="showScreen('screen-top')">← トップへ</button>
+  </section>
+
+  <!-- ============ REVIEW ============ -->
+  <section id="screen-review" class="screen">
+    <div class="review-card" id="reviewCard"></div>
+    <div class="footer-row">
+      <button class="btn btn-ghost" onclick="backToResult()">‹ 結果に戻る</button>
+    </div>
+  </section>
+
+  <!-- ============ RANKING ============ -->
+  <section id="screen-ranking" class="screen">
+    <div class="crest" style="margin-top:30px;">
+      <h1 style="font-size:clamp(26px,8vw,42px);">🏆 ランキング</h1>
+      <div class="subtitle">この端末に保存された記録（ジャンル別 / 上位10位）</div>
+    </div>
+    <div class="rank-tabs" id="rankTabs"></div>
+    <ul class="rank-list" id="rankList"></ul>
+    <div class="footer-row" style="gap:10px;flex-wrap:wrap;">
+      <button class="btn btn-ghost" onclick="goTitle()">🏠 トップへ戻る</button>
+      <button class="btn btn-ghost" onclick="clearRanking()">🗑 この記録を消去</button>
+    </div>
+  </section>
+
+</div>
+
+<!-- confirmation modal（最後の確認） -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <div class="ji" id="modalJi">🎸</div>
+    <h2 id="modalName">ジャンル</h2>
+    <p id="modalDesc"></p>
+    <div class="rules">
+      ⏱ 60秒　/　全10問　/　正解 +10点・+5秒<br>残り時間はそのままボーナス点に！
+    </div>
+    <div class="modal-btns">
+      <button class="btn btn-ghost" onclick="closeModal()">やめる</button>
+      <button class="btn btn-crimson" onclick="confirmStart()">スタート！</button>
     </div>
   </div>
-  <div class="wrong-section" id="wrong-section"></div>
-  <a class="portal-back" href="https://pecpec37-gift.github.io/portal/">← とみやんのゲームランド（ポータルサイトに戻る）</a>
 </div>
-<div id="screen-ranking" class="screen">
-  <div class="ranking-wrap">
-    <div class="ranking-top"><div class="ranking-title">🏆 スコアランキング</div><button class="ranking-back" onclick="showScreen('screen-top')">← トップへ</button></div>
-    <div class="ranking-tabs" id="ranking-tabs"></div>
-    <div class="ranking-list" id="ranking-list"></div>
-    <div style="text-align:center;margin-top:16px;"><button class="ranking-del" onclick="deleteRanking()">🗑️ このジャンルの記録を削除</button></div>
+
+<!-- 正誤オーバーレイ -->
+<div class="result-overlay" id="resultOverlay">
+  <div class="ro-card" id="roCard">
+    <div class="ro-mark" id="roMark">◯</div>
+    <div class="ro-head" id="roHead">正解！</div>
+    <div class="ro-ans" id="roAns"></div>
+    <div class="ro-explain" id="roExplain"></div>
+    <button class="btn btn-crimson" onclick="nextQuestion()">次の問題へ ›</button>
   </div>
 </div>
-<div id="toast"></div>
-<a class="portal-fixed-btn" href="https://pecpec37-gift.github.io/portal/">← ポータルサイトに戻る</a>
-<script>
-/* ===== 背景canvas（画面サイズに自動追従・音符が流れる装飾） ===== */
-(function(){
-  const cv=document.getElementById('bg-canvas');const ctx=cv.getContext('2d');
-  let W=0,H=0,dpr=1,notes=[];const GLYPHS=['♪','♫','♬','♩','𝄞'];
-  function resize(){
-    dpr=Math.min(window.devicePixelRatio||1,2);
-    W=window.innerWidth;H=window.innerHeight;
-    cv.width=Math.floor(W*dpr);cv.height=Math.floor(H*dpr);
-    cv.style.width=W+'px';cv.style.height=H+'px';
-    ctx.setTransform(dpr,0,0,dpr,0,0);
-    const target=Math.max(10,Math.min(34,Math.round(W*H/26000)));
-    while(notes.length<target)notes.push(spawn(true));
-    if(notes.length>target)notes.length=target;
-  }
-  function spawn(init){return{x:Math.random()*W,y:init?Math.random()*H:H+30,
-    g:GLYPHS[Math.floor(Math.random()*GLYPHS.length)],
-    s:12+Math.random()*22,sp:0.25+Math.random()*0.7,
-    dr:(Math.random()-0.5)*0.6,a:0.05+Math.random()*0.18,
-    rot:Math.random()*Math.PI,rv:(Math.random()-0.5)*0.01,
-    hue:Math.random()<0.5?'167,139,250':'201,162,39'};}
-  function draw(){
-    ctx.clearRect(0,0,W,H);
-    for(const n of notes){
-      n.y-=n.sp;n.x+=n.dr;n.rot+=n.rv;
-      if(n.y<-40){Object.assign(n,spawn(false));}
-      ctx.save();ctx.translate(n.x,n.y);ctx.rotate(n.rot);
-      ctx.globalAlpha=n.a;ctx.fillStyle='rgba('+n.hue+',1)';
-      ctx.font=n.s+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';
-      ctx.fillText(n.g,0,0);ctx.restore();
-    }
-    requestAnimationFrame(draw);
-  }
-  window.addEventListener('resize',resize);
-  resize();requestAnimationFrame(draw);
-})();
 
-/* ===== ジャンル ===== */
-const GENRES=[
-  {id:'folk',  icon:'🎸',name:'昭和フォーク・ニューミュージック',color:'#a78bfa',desc:'なごり雪・卒業写真・少年時代・神田川 など'},
-  {id:'kayo',  icon:'🎤',name:'昭和歌謡・アイドル',            color:'#c0392b',desc:'木綿のハンカチーフ・勝手にしやがれ・赤いスイートピー など'},
-  {id:'eighties',icon:'🎹',name:'80年代ポップス・バンド',       color:'#c9a227',desc:'フレンズ・Romanticが止まらない・恋におちて など'},
-  {id:'heisei',icon:'💿',name:'平成J-POP黄金期',              color:'#3fae7a',desc:'TRUE LOVE・負けないで・ロビンソン・世界に一つだけの花 など'},
-  {id:'artist',icon:'🎶',name:'歌手・アーティスト物語',         color:'#5aa9d6',desc:'サザン・ユーミン・中島みゆき・竹内まりや・テレサ・テン など'},
-  {id:'tieup', icon:'📺',name:'主題歌・CM・受賞・紅白',         color:'#d9533f',desc:'レコード大賞・ドラマ/CMタイアップ・紅白エピソード など'},
-];
-// type:'4'=4択（c配列の先頭が正解、表示時にシャッフル） / type:'ox'=○×（a:true/false）
-// q:問題文 / c:選択肢 / a:正解index(4択)またはbool(ox) / m:解説
-const DB={
-folk:[
-  {type:'4',q:'<span class="song">なごり雪</span>を歌って大ヒットさせた、フォークシンガーは？',c:['イルカ','五輪真弓','森山良子','南こうせつ'],a:0,m:'原曲はかぐや姫。伊勢正三が作詞・作曲し、イルカのカバーが1975年に大ヒットした。'},
-  {type:'ox',q:'<span class="song">なごり雪</span>の作詞・作曲は、伊勢正三である。',a:true,m:'かぐや姫のメンバー伊勢正三の作。21歳で書いた初のプロ作品とされる。'},
-  {type:'4',q:'<span class="song">岬めぐり</span>を歌ったのは？',c:['山本コータローとウィークエンド','チューリップ','かぐや姫','風'],a:0,m:'1974年のヒット曲。'},
-  {type:'4',q:'<span class="song">卒業写真</span>を作詞・作曲・歌唱したのは？',c:['荒井由実（松任谷由実）','太田裕美','竹内まりや','中島みゆき'],a:0,m:'1975年。ハイ・ファイ・セットのカバーでも親しまれた。'},
-  {type:'4',q:'<span class="song">サボテンの花</span>を歌ったバンドと、その中心人物は？',c:['チューリップ（財津和夫）','オフコース（小田和正）','アリス（谷村新司）','ガロ'],a:0,m:'1975年。1993年にドラマ「ひとつ屋根の下」で再び大ヒットした。'},
-  {type:'ox',q:'井上陽水の<span class="song">少年時代</span>は、同名映画の主題歌として作られた曲である。',a:true,m:'1990年。藤子不二雄Ⓐ原作の映画「少年時代」の主題歌。'},
-  {type:'4',q:'<span class="song">少年時代</span>を歌ったのは？',c:['井上陽水','吉田拓郎','さだまさし','小椋佳'],a:0,m:'井上陽水の代表曲のひとつ。'},
-  {type:'4',q:'デビュー曲<span class="song">異邦人</span>を歌ったのは？',c:['久保田早紀','八神純子','庄野真代','大貫妙子'],a:0,m:'1979年。サブタイトルは「シルクロードのテーマ」。'},
-  {type:'ox',q:'<span class="song">異邦人</span>は、テレビCMに使われたことでも話題になった。',a:true,m:'三洋電機のテレビCMソングに起用され大ヒットした。'},
-  {type:'4',q:'フォークグループ「風」の代表曲<span class="song">22才の別れ</span>。中心メンバーは？',c:['伊勢正三','南こうせつ','かまやつひろし','北山修'],a:0,m:'かぐや姫解散後、伊勢正三が大久保一久と結成したのが「風」。'},
-  {type:'4',q:'<span class="song">神田川</span>を歌ったフォークグループは？',c:['かぐや姫','赤い鳥','ガロ','チェリッシュ'],a:0,m:'1973年。作詞・喜多条忠、作曲・南こうせつ。'},
-  {type:'ox',q:'<span class="song">翼をください</span>は、もともと中島みゆきが歌った曲である。',a:false,m:'正しくは「赤い鳥」が1971年に歌った曲。合唱曲としても親しまれる。'},
-  {type:'4',q:'ユーミン（荒井由実）が作詞・作曲し、バンバンが歌ってヒットした曲は？',c:['「いちご白書」をもう一度','学生街の喫茶店','あの日にかえりたい','冷たい雨'],a:0,m:'1975年。学生運動の余韻を描いた青春ソング。'},
-  {type:'4',q:'<span class="song">学生街の喫茶店</span>を歌ったグループは？',c:['ガロ','チューリップ','かぐや姫','トワ・エ・モワ'],a:0,m:'1972年発売。翌年にかけて大ヒットした。'},
-  {type:'4',q:'「結婚しようよ」で“フォークの貴公子”と呼ばれたシンガーは？',c:['よしだたくろう（吉田拓郎）','井上陽水','小椋佳','泉谷しげる'],a:0,m:'1972年。フォークがお茶の間に広まる契機となった。'},
-  {type:'4',q:'アリスの代表曲<span class="song">冬の稲妻</span>。ボーカルの一人で「昴」も歌ったのは？',c:['谷村新司','堀内孝雄','矢沢永吉','チャゲ'],a:0,m:'アリスは谷村新司・堀内孝雄・矢沢透の3人組。'},
-  {type:'ox',q:'<span class="song">少年時代</span>は1980年代に発表された曲である。',a:false,m:'発表は1990年。平成に入ってからのヒット。'},
-  {type:'4',q:'チェリッシュ、トワ・エ・モワ、ヒデとロザンナに共通する編成は？',c:['男女ペア(デュオ)','3人組','4人バンド','ソロ'],a:0,m:'いずれも昭和を代表する男女デュオ。'},
-  {type:'4',q:'さだまさしが在籍していたフォークデュオは？',c:['グレープ','風','ふきのとう','チューリップ'],a:0,m:'「精霊流し」などで知られるグレープ。後にソロで活躍。'},
-  {type:'ox',q:'<span class="song">なごり雪</span>の原曲を歌ったのは「かぐや姫」である。',a:true,m:'1974年、アルバム収録曲として発表。イルカのカバーで広く知られた。'},
-  {type:'4',q:'「精霊流し」「関白宣言」で知られるシンガーソングライターは？',c:['さだまさし','松山千春','長渕剛','武田鉄矢'],a:0,m:'語りかけるような歌詞で人気を集めた。'},
-  {type:'4',q:'「恋」「季節の中で」など、北海道出身で知られるフォーク／ニューミュージック歌手は？',c:['松山千春','長渕剛','財津和夫','南こうせつ'],a:0,m:'伸びやかな高音が持ち味。'},
-  {type:'ox',q:'<span class="song">卒業写真</span>は、太田裕美が作詞・作曲した曲である。',a:false,m:'作詞・作曲は荒井由実（松任谷由実）。多くの歌手にカバーされた。'},
-  {type:'4',q:'オフコースの中心人物で、後に「ラブ・ストーリーは突然に」を歌ったのは？',c:['小田和正','鈴木康博','財津和夫','大野克夫'],a:0,m:'澄んだ高音が代名詞。'},
-  {type:'4',q:'森田公一とトップギャランの大ヒット曲は？',c:['青春時代','岬めぐり','学生街の喫茶店','遠くで汽笛を聞きながら'],a:0,m:'1976年。世代を超えて歌われる青春ソング。'},
-  {type:'ox',q:'<span class="song">岬めぐり</span>は1990年代のヒット曲である。',a:false,m:'1974年（昭和49年）のヒット。山本コータローとウィークエンドが歌った。'},
-],
-kayo:[
-  {type:'4',q:'<span class="song">木綿のハンカチーフ</span>を歌ったのは？',c:['太田裕美','岩崎宏美','桜田淳子','南沙織'],a:0,m:'1975年。作詞・松本隆、作曲・筒美京平のヒットコンビ作。'},
-  {type:'ox',q:'<span class="song">木綿のハンカチーフ</span>は、男女の手紙のやりとり（対話）で進む歌詞が特徴である。',a:true,m:'都会へ出た男性と故郷の女性の掛け合いが描かれる。'},
-  {type:'4',q:'沢田研二の<span class="song">勝手にしやがれ</span>。この曲が獲得した大きな賞は？',c:['日本レコード大賞','アカデミー賞','直木賞','グラミー賞'],a:0,m:'1977年・第19回日本レコード大賞を受賞。'},
-  {type:'4',q:'寺尾聰<span class="song">ルビーの指環</span>が日本レコード大賞を受賞したのは？',c:['1981年（昭和56年）','1971年','1991年','2001年'],a:0,m:'第23回。大賞・作曲賞・編曲賞・作詩賞を独占した。'},
-  {type:'ox',q:'<span class="song">ルビーの指環</span>の作詞は松本隆である。',a:true,m:'寺尾聰自身が作曲、松本隆が作詞を手がけた。'},
-  {type:'4',q:'松田聖子<span class="song">赤いスイートピー</span>の作詞を手がけたのは？',c:['松本隆','阿久悠','なかにし礼','秋元康'],a:0,m:'1982年。作曲は呉田軽穂（松任谷由実の別名義）。'},
-  {type:'4',q:'尾崎紀世彦の<span class="song">また逢う日まで</span>。この曲は何の賞を受賞した？',c:['日本レコード大賞','ノーベル賞','本屋大賞','菊池寛賞'],a:0,m:'1971年・第13回日本レコード大賞を受賞。'},
-  {type:'4',q:'八代亜紀<span class="song">雨の慕情</span>が日本レコード大賞を受賞したのは？',c:['1980年（昭和55年）','1970年','1990年','1985年'],a:0,m:'第22回。演歌の名曲として知られる。'},
-  {type:'4',q:'<span class="song">時の流れに身をまかせ</span>を歌った、台湾出身の歌手は？',c:['テレサ・テン','欧陽菲菲','アグネス・チャン','ジュディ・オング'],a:0,m:'「つぐない」「愛人」とともに代表曲。'},
-  {type:'ox',q:'ピンク・レディーの<span class="song">UFO</span>は日本レコード大賞を受賞した。',a:true,m:'1978年・第20回日本レコード大賞を受賞。'},
-  {type:'4',q:'「春一番」「年下の男の子」で人気を集めたアイドルグループは？',c:['キャンディーズ','ピンク・レディー','ザ・ピーナッツ','三人娘'],a:0,m:'「普通の女の子に戻りたい」の解散宣言でも知られる。'},
-  {type:'4',q:'<span class="song">津軽海峡冬景色</span>を歌った演歌歌手は？',c:['石川さゆり','八代亜紀','都はるみ','坂本冬美'],a:0,m:'1977年。作詞・阿久悠、作曲・三木たかし。'},
-  {type:'ox',q:'山口百恵の<span class="song">いい日旅立ち</span>は、阿久悠が作詞・作曲した曲である。',a:false,m:'作詞・作曲は谷村新司。国鉄キャンペーンソングとして知られる。'},
-  {type:'4',q:'デビュー曲「スローモーション」、ヒット曲「セカンド・ラブ」で知られるのは？',c:['中森明菜','松田聖子','小泉今日子','薬師丸ひろ子'],a:0,m:'1982年デビュー。80年代を代表するアイドル。'},
-  {type:'4',q:'中森明菜<span class="song">飾りじゃないのよ涙は</span>の作詞・作曲を手がけたのは？',c:['井上陽水','松本隆','来生たかお','尾崎豊'],a:0,m:'井上陽水の提供曲。1984年。'},
-  {type:'4',q:'「喝采」で日本レコード大賞を受賞した歌手は？',c:['ちあきなおみ','八代亜紀','都はるみ','森昌子'],a:0,m:'1972年・第14回。ドラマ性のある歌唱で知られた。'},
-  {type:'ox',q:'<span class="song">勝手にしやがれ</span>を歌ったのは沢田研二である。',a:true,m:'“ジュリー”の愛称で親しまれた。帽子を使った振付も有名。'},
-  {type:'4',q:'森昌子・桜田淳子・山口百恵の3人をまとめて呼んだ言葉は？',c:['花の中三トリオ','三人娘','新御三家','ニューミュージック'],a:0,m:'同学年でデビューした人気アイドル3人。'},
-  {type:'4',q:'郷ひろみ・西城秀樹・野口五郎の3人を指す呼び名は？',c:['新御三家','花の中三トリオ','たのきんトリオ','三羽烏'],a:0,m:'1970年代を代表する男性アイドル。'},
-  {type:'4',q:'「およげ！たいやきくん」が記録的に売れたのは何年代？',c:['1970年代','1960年代','1980年代','1990年代'],a:0,m:'1975〜76年。子門真人の歌唱で社会現象に。'},
-  {type:'ox',q:'松田聖子<span class="song">赤いスイートピー</span>の作詞は、阿久悠である。',a:false,m:'作詞は松本隆、作曲は松任谷由実（呉田軽穂名義）。'},
-  {type:'4',q:'美空ひばりの最後のシングルとなった名曲は？',c:['川の流れのように','愛燦燦','悲しい酒','柔'],a:0,m:'1989年。作詞・秋元康。'},
-  {type:'4',q:'「およげ！たいやきくん」のように、子ども向けでも大人に親しまれた歌が多いのはどの時代？',c:['昭和','令和','平成後期','大正'],a:0,m:'お茶の間でテレビと共に歌が広まった時代。'},
-  {type:'ox',q:'<span class="song">また逢う日まで</span>は1980年代の日本レコード大賞受賞曲である。',a:false,m:'受賞は1971年（第13回）。1970年代の受賞曲。'},
-  {type:'4',q:'「与作」などで知られ、長く演歌界をけん引した男性歌手は？',c:['北島三郎','五木ひろし','森進一','村田英雄'],a:0,m:'“サブちゃん”の愛称で親しまれた。'},
-  {type:'4',q:'「およげ！たいやきくん」「およげ」のような大ヒットを生む、昭和の音楽の主な普及経路は？',c:['テレビの歌番組','動画配信','サブスク','SNS'],a:0,m:'「ザ・ベストテン」など歌番組がヒットを生んだ。'},
-],
-eighties:[
-  {type:'4',q:'<span class="song">君は1000%</span>を歌ったグループは？',c:['1986オメガトライブ','C-C-B','チェッカーズ','TUBE'],a:0,m:'1986年。爽やかなシティポップ系サウンド。'},
-  {type:'4',q:'<span class="song">Romanticが止まらない</span>を歌ったのは？',c:['C-C-B','レベッカ','BARBEE BOYS','シャネルズ'],a:0,m:'1985年。ピンクや赤の髪が印象的なバンド。'},
-  {type:'ox',q:'C-C-Bの<span class="song">Romanticが止まらない</span>は、テレビドラマで使われて人気が高まった。',a:true,m:'ドラマ「毎度おさわがせします」で使用され話題に。'},
-  {type:'4',q:'<span class="song">フレンズ</span>を歌った、NOKKOがボーカルのバンドは？',c:['レベッカ','プリンセス プリンセス','SHOW-YA','BARBEE BOYS'],a:0,m:'1985年。80年代バンドブームを代表する曲。'},
-  {type:'4',q:'デビュー曲<span class="song">恋におちて -Fall in love-</span>を歌ったのは？',c:['小林明子','中村あゆみ','杏里','大貫妙子'],a:0,m:'1985年。TBSドラマ「金曜日の妻たちへIII」主題歌。'},
-  {type:'ox',q:'<span class="song">恋におちて -Fall in love-</span>は、ドラマ「金曜日の妻たちへIII」の主題歌だった。',a:true,m:'“金妻”ブームを象徴する一曲。作詞は湯川れい子。'},
-  {type:'4',q:'女性ボーカル・奥居香（岸谷香）の<span class="song">Diamonds</span>を歌ったバンドは？',c:['プリンセス プリンセス','レベッカ','SHOW-YA','ZELDA'],a:0,m:'1989年。「M」も同年の代表曲。'},
-  {type:'4',q:'チェッカーズのボーカルで、後にソロで「TRUE LOVE」を歌ったのは？',c:['藤井フミヤ','吉川晃司','尾崎豊','佐野元春'],a:0,m:'チェッカーズ解散後にソロ活動を本格化。'},
-  {type:'4',q:'安全地帯<span class="song">ワインレッドの心</span>の作詞を手がけたのは？',c:['井上陽水','松本隆','売野雅勇','秋元康'],a:0,m:'1983年。ボーカルは玉置浩二。'},
-  {type:'ox',q:'安全地帯のボーカルは玉置浩二である。',a:true,m:'「ワインレッドの心」「恋の予感」などを歌った。'},
-  {type:'4',q:'渡辺美里<span class="song">My Revolution</span>の作曲を手がけ、後に一時代を築いたのは？',c:['小室哲哉','筒美京平','坂本龍一','大村雅朗'],a:0,m:'1986年。小室哲哉のヒットメーカーとしての出発点の一つ。'},
-  {type:'4',q:'アニメ「シティーハンター」のエンディングで人気を博した、TM NETWORKの曲は？',c:['Get Wild','Self Control','Beyond the Time','Come on Let\u2019s Dance'],a:0,m:'1987年。小室哲哉・宇都宮隆・木根尚登の3人組。'},
-  {type:'4',q:'<span class="song">翼の折れたエンジェル</span>を歌った女性シンガーは？',c:['中村あゆみ','レベッカ NOKKO','浜田麻里','本田美奈子'],a:0,m:'1985年のヒット曲。'},
-  {type:'ox',q:'尾崎豊の「15の夜」「卒業」は、若者の心情を歌った1980年代の楽曲である。',a:true,m:'10代の葛藤を描いた歌詞で熱狂的な支持を得た。'},
-  {type:'4',q:'「ギンギラギンにさりげなく」を歌った、たのきんトリオの一人は？',c:['近藤真彦','田原俊彦','野村義男','少年隊'],a:0,m:'“マッチ”の愛称で人気。'},
-  {type:'4',q:'チェッカーズの初期ヒット曲といえば？',c:['ギザギザハートの子守唄','ガラスの十代','勝手にシンドバッド','SHAKE'],a:0,m:'福岡出身の7人組バンド。'},
-  {type:'ox',q:'<span class="song">フレンズ</span>を歌ったレベッカのボーカルは渡辺美里である。',a:false,m:'レベッカのボーカルはNOKKO。渡辺美里は「My Revolution」など。'},
-  {type:'4',q:'「待つわ」で知られ、ポプコン出身の女性デュオは？',c:['あみん','ピンク・レディー','チェリッシュ','Wink'],a:0,m:'1982年の大ヒット。岡村孝子と加藤晴子の2人組。'},
-  {type:'4',q:'杉山清貴&オメガトライブの代表曲で、夏の定番となったのは？',c:['サマー・サスピション','君は1000%','TRUE LOVE','スコール'],a:0,m:'1983年。リゾート感あるサウンドで人気。'},
-  {type:'ox',q:'<span class="song">君は1000%</span>は1970年代のヒット曲である。',a:false,m:'1986年のヒット。1986オメガトライブが歌った。'},
-  {type:'4',q:'「夏の扉」「青い珊瑚礁」など、80年代前半に次々とヒットを放ったアイドルは？',c:['松田聖子','中森明菜','小泉今日子','河合奈保子'],a:0,m:'“聖子ちゃんカット”も社会現象に。'},
-  {type:'4',q:'男女混成バンドBARBEE BOYS（バービーボーイズ）が活躍したのは主にどの年代？',c:['1980年代','1960年代','2000年代','2010年代'],a:0,m:'掛け合いボーカルが特徴のバンド。'},
-  {type:'ox',q:'「Get Wild」を歌ったTM NETWORKは、女性デュオである。',a:false,m:'小室哲哉・宇都宮隆・木根尚登の男性3人組。「シティーハンター」EDで人気。'},
-  {type:'4',q:'「め組のひと」で知られるグループは？',c:['ラッツ&スター（シャネルズ）','C-C-B','BARBEE BOYS','米米CLUB'],a:0,m:'鈴木雅之が在籍したことでも知られる。'},
-  {type:'4',q:'吉川晃司、佐野元春、尾崎豊らに共通するのは？',c:['80年代に人気を集めた男性シンガー','演歌歌手','女性アイドル','クラシック奏者'],a:0,m:'いずれもロック／ポップス系の男性アーティスト。'},
-  {type:'ox',q:'プリンセス プリンセスは女性だけのバンドである。',a:true,m:'「Diamonds」「M」などのヒットで知られる。'},
-],
-heisei:[
-  {type:'4',q:'藤井フミヤ<span class="song">TRUE LOVE</span>の主題歌に使われたフジテレビのドラマは？',c:['あすなろ白書','東京ラブストーリー','101回目のプロポーズ','ロングバケーション'],a:0,m:'1993年。月9ドラマの主題歌として大ヒットした。'},
-  {type:'4',q:'DREAMS COME TRUE<span class="song">LOVE LOVE LOVE</span>の主題歌となったドラマは？',c:['愛していると言ってくれ','ロングバケーション','北の国から','ひとつ屋根の下'],a:0,m:'1995年。ドリカム最大のヒット曲の一つ。'},
-  {type:'4',q:'SMAP<span class="song">世界に一つだけの花</span>の作詞・作曲を手がけたのは？',c:['槇原敬之','小室哲哉','つんく♂','桜井和寿'],a:0,m:'2003年。「ナンバーワンよりオンリーワン」のメッセージで国民的ヒットに。'},
-  {type:'ox',q:'<span class="song">負けないで</span>を歌ったのはZARDである。',a:true,m:'1993年。ボーカルは坂井泉水。応援ソングの定番。'},
-  {type:'4',q:'スピッツ<span class="song">ロビンソン</span>が大ヒットしたのは何年代？',c:['1990年代','1970年代','1980年代','2010年代'],a:0,m:'1995年。バンドの知名度を一気に押し上げた。'},
-  {type:'4',q:'<span class="song">涙そうそう</span>を歌い、全国的な大ヒットにした沖縄出身の歌手は？',c:['夏川りみ','THE BOOM','BEGIN','安室奈美恵'],a:0,m:'2001年に発売、翌年以降ロングヒット。'},
-  {type:'ox',q:'<span class="song">涙そうそう</span>は、夏川りみ自身が作詞・作曲した曲である。',a:false,m:'作詞は森山良子、作曲はBEGIN。夏川りみの歌唱で大ヒットした。'},
-  {type:'4',q:'玉置浩二<span class="song">田園</span>が発表されたのは何年代？',c:['1990年代','1970年代','1980年代','2000年代'],a:0,m:'1996年。力強い応援ソング。'},
-  {type:'4',q:'DREAMS COME TRUE<span class="song">未来予想図II</span>のボーカルは？',c:['吉田美和','坂井泉水','岡本真夜','広瀬香美'],a:0,m:'1990年。結婚式の定番ソングとしても人気。'},
-  {type:'4',q:'CHAGE and ASKA<span class="song">SAY YES</span>の主題歌となったドラマは？',c:['101回目のプロポーズ','東京ラブストーリー','あすなろ白書','すいか'],a:0,m:'1991年。武田鉄矢主演ドラマの主題歌で大ヒット。'},
-  {type:'ox',q:'<span class="song">世界に一つだけの花</span>を歌ったのはSMAPである。',a:true,m:'2003年。シングルも記録的なセールスを残した。'},
-  {type:'4',q:'久保田利伸<span class="song">LA・LA・LA LOVE SONG</span>の主題歌となったドラマは？',c:['ロングバケーション','あすなろ白書','ビーチボーイズ','ひとつ屋根の下'],a:0,m:'1996年。木村拓哉・山口智子主演の月9。'},
-  {type:'4',q:'「どんなときも。」を歌った、後に「世界に一つだけの花」を書いたのは？',c:['槇原敬之','藤井フミヤ','大事MANブラザーズバンド','小田和正'],a:0,m:'1991年。映画「就職戦線異状なし」主題歌。'},
-  {type:'ox',q:'Mr.Childrenの「innocent world」は日本レコード大賞を受賞した。',a:true,m:'1994年・第36回日本レコード大賞を受賞。'},
-  {type:'4',q:'サザンオールスターズ<span class="song">TSUNAMI</span>が日本レコード大賞を受賞したのは何年？',c:['2000年','1990年','1995年','2005年'],a:0,m:'第42回日本レコード大賞を受賞。'},
-  {type:'4',q:'福山雅治の代表的バラードといえば？',c:['桜坂','TSUNAMI','ロビンソン','田園'],a:0,m:'2000年。落ち着いたメロディが人気。'},
-  {type:'ox',q:'ZARDのボーカルは広瀬香美である。',a:false,m:'ZARDのボーカルは坂井泉水。「揺れる想い」「負けないで」などを歌った。'},
-  {type:'4',q:'H Jungle with t<span class="song">WOW WAR TONIGHT</span>で歌ったお笑い芸人は？',c:['浜田雅功','松本人志','とんねるず','ウッチャンナンチャン'],a:0,m:'1995年。小室哲哉プロデュースで大ヒット。'},
-  {type:'4',q:'スピッツのボーカルは？',c:['草野マサムネ','桜井和寿','吉田美和','岡本真夜'],a:0,m:'独特の高音と詩的な歌詞が魅力。'},
-  {type:'ox',q:'<span class="song">負けないで</span>は2000年代のヒット曲である。',a:false,m:'1993年のヒット。ZARD（坂井泉水）が歌った。'},
-  {type:'4',q:'「LA・LA・LA LOVE SONG」を歌った、ファンク／ソウル色の強い男性シンガーは？',c:['久保田利伸','藤井フミヤ','玉置浩二','槇原敬之'],a:0,m:'「ミッシング」なども代表曲。'},
-  {type:'4',q:'globe、TRF、安室奈美恵らを手がけ、90年代に旋風を起こしたプロデューサーは？',c:['小室哲哉','つんく♂','秋元康','小林武史'],a:0,m:'いわゆる“小室ファミリー”を率いた。'},
-  {type:'ox',q:'Mr.Childrenのボーカルは桜井和寿である。',a:true,m:'「Tomorrow never knows」「innocent world」などで知られる。'},
-  {type:'4',q:'1993年に大ヒットした、THE 虎舞竜のロングバラードは？',c:['ロード','TSUNAMI','負けないで','SAY YES'],a:0,m:'切ない歌詞で話題になった。'},
-  {type:'4',q:'「DEPARTURES」「Can\u2019t Stop Fallin\u2019 in Love」などで知られる、小室哲哉のユニットは？',c:['globe','TRF','trf','dos'],a:0,m:'KEIKOらが在籍。1990年代後半に活躍。'},
-  {type:'ox',q:'<span class="song">田園</span>を歌った玉置浩二は、安全地帯のボーカルでもある。',a:true,m:'バンドとソロの両方で活躍した。'},
-],
-artist:[
-  {type:'4',q:'サザンオールスターズのボーカル・中心人物は？',c:['桑田佳祐','山下達郎','佐野元春','財津和夫'],a:0,m:'「いとしのエリー」「TSUNAMI」など多数のヒットを生んだ。'},
-  {type:'4',q:'サザンオールスターズのデビュー曲は？',c:['勝手にシンドバッド','いとしのエリー','TSUNAMI','チャコの海岸物語'],a:0,m:'1978年デビュー。'},
-  {type:'ox',q:'<span class="song">いとしのエリー</span>はサザンオールスターズの曲である。',a:true,m:'1979年。バラードの代表曲。'},
-  {type:'4',q:'「時代」「糸」「地上の星」などで知られるシンガーソングライターは？',c:['中島みゆき','松任谷由実','竹内まりや','森山良子'],a:0,m:'数多くのアーティストに楽曲を提供したことでも有名。'},
-  {type:'ox',q:'中島みゆき<span class="song">地上の星</span>は、NHKの番組「プロジェクトX」の主題歌として広く知られた。',a:true,m:'長期にわたりロングヒットを記録した。'},
-  {type:'4',q:'「駅」「元気を出して」などを作り、夫は山下達郎であるシンガーソングライターは？',c:['竹内まりや','松任谷由実','中島みゆき','大貫妙子'],a:0,m:'自身の歌唱でも他歌手への提供でも活躍。'},
-  {type:'4',q:'荒井由実から改姓した「松任谷由実」の愛称は？',c:['ユーミン','ピンキー','アッコ','レミ'],a:0,m:'結婚を機に松任谷姓に。日本のニューミュージックを代表する存在。'},
-  {type:'4',q:'松任谷由実の代表曲<span class="song">春よ、来い</span>が発表されたのは何年代？',c:['1990年代','1970年代','1980年代','2000年代'],a:0,m:'1994年。同名ドラマの主題歌にもなった。'},
-  {type:'4',q:'「つぐない」「愛人」「時の流れに身をまかせ」で日本でも国民的人気を得た歌手は？',c:['テレサ・テン','欧陽菲菲','アグネス・チャン','ジュディ・オング'],a:0,m:'台湾出身。アジア各地で愛された。'},
-  {type:'ox',q:'DREAMS COME TRUE（ドリカム）の女性ボーカルは坂井泉水である。',a:false,m:'ドリカムの女性ボーカルは吉田美和。坂井泉水はZARD。'},
-  {type:'4',q:'今井美樹<span class="song">PRIDE</span>の作詞・作曲を手がけ、のちに夫となったのは？',c:['布袋寅泰','吉川晃司','玉置浩二','藤井フミヤ'],a:0,m:'1996年。BOØWYのギタリストとしても有名。'},
-  {type:'4',q:'「乾杯」「とんぼ」などで知られる、骨太な歌声のシンガーは？',c:['長渕剛','松山千春','さだまさし','武田鉄矢'],a:0,m:'結婚式の定番「乾杯」で広く親しまれた。'},
-  {type:'ox',q:'<span class="song">乾杯</span>は長渕剛の楽曲である。',a:true,m:'結婚や門出の場で歌われる定番ソング。'},
-  {type:'4',q:'アリスのメンバーで、ソロでも「昴」「いい日旅立ち（提供）」を手がけたのは？',c:['谷村新司','堀内孝雄','チャゲ','飛鳥'],a:0,m:'スケールの大きな楽曲で知られた。'},
-  {type:'4',q:'井上陽水が他の歌手に提供した代表曲は？',c:['飾りじゃないのよ涙は（中森明菜）','勝手にしやがれ（沢田研二）','異邦人（久保田早紀）','異邦人'],a:0,m:'陽水は自作のほか提供曲でもヒットを生んだ。'},
-  {type:'ox',q:'竹内まりやの夫は、シンガーソングライターの山下達郎である。',a:true,m:'山下達郎は「クリスマス・イブ」などで知られる。'},
-  {type:'4',q:'「クリスマス・イブ」で知られ、シティポップの第一人者とされるのは？',c:['山下達郎','大滝詠一','佐野元春','杉山清貴'],a:0,m:'JR東海のCMでも長く使われた。'},
-  {type:'4',q:'チューリップの中心人物で、「サボテンの花」「青春の影」を歌ったのは？',c:['財津和夫','小田和正','谷村新司','南こうせつ'],a:0,m:'メロディメーカーとして高く評価される。'},
-  {type:'ox',q:'スピッツのボーカルは桜井和寿である。',a:false,m:'スピッツのボーカルは草野マサムネ。桜井和寿はMr.Children。'},
-  {type:'4',q:'「川の流れのように」を歌い、“歌謡界の女王”と称されたのは？',c:['美空ひばり','島倉千代子','都はるみ','八代亜紀'],a:0,m:'昭和を代表する大歌手。'},
-  {type:'4',q:'ZARDのボーカル・坂井泉水の代表的なイメージとして正しいのは？',c:['力強い応援ソングを多く歌った','演歌一筋だった','ラップが中心だった','クラシック歌手だった'],a:0,m:'「負けないで」「揺れる想い」など前向きな楽曲が多い。'},
-  {type:'ox',q:'松任谷由実は、荒井由実時代に「卒業写真」を発表している。',a:true,m:'結婚を機に「松任谷由実」へ改名した。'},
-  {type:'4',q:'「異邦人」の久保田早紀、「待つわ」のあみん。両者に共通するのは？',c:['女性アーティスト','演歌歌手','男性デュオ','海外出身'],a:0,m:'いずれも昭和後期の女性アーティスト。'},
-  {type:'4',q:'桑田佳祐がボーカルを務めるバンドは？',c:['サザンオールスターズ','TUBE','米米CLUB','チェッカーズ'],a:0,m:'夏の名曲を数多く生んだ。'},
-  {type:'ox',q:'テレサ・テンは韓国出身の歌手である。',a:false,m:'テレサ・テンは台湾出身。アジア各地で広く愛された。'},
-  {type:'4',q:'「ひこうき雲」「やさしさに包まれたなら」などを手がけたのは？',c:['松任谷由実（荒井由実）','竹内まりや','中島みゆき','大貫妙子'],a:0,m:'映画やCMでも楽曲が使われ続けている。'},
-],
-tieup:[
-  {type:'4',q:'海援隊<span class="song">贈る言葉</span>の主題歌となったテレビドラマは？',c:['3年B組金八先生','スクール☆ウォーズ','熱中時代','北の国から'],a:0,m:'1979年。武田鉄矢が在籍する海援隊の代表曲。'},
-  {type:'ox',q:'<span class="song">贈る言葉</span>は卒業・別れの場面で歌われる定番曲である。',a:true,m:'ドラマ「3年B組金八先生」の主題歌として広まった。'},
-  {type:'4',q:'日本レコード大賞を受賞していない曲はどれ？',c:['なごり雪','勝手にしやがれ','ルビーの指環','また逢う日まで'],a:0,m:'「なごり雪」は大賞受賞曲ではない。他の3曲は受賞曲。'},
-  {type:'4',q:'TBSドラマ「金曜日の妻たちへIII」の主題歌は？',c:['恋におちて -Fall in love-','TRUE LOVE','SAY YES','LOVE LOVE LOVE'],a:0,m:'小林明子が歌い、“金妻ブーム”を象徴した。'},
-  {type:'4',q:'フジテレビ「あすなろ白書」の主題歌は？',c:['TRUE LOVE','SAY YES','ロビンソン','負けないで'],a:0,m:'藤井フミヤのソロデビュー曲。1993年。'},
-  {type:'4',q:'武田鉄矢主演「101回目のプロポーズ」の主題歌は？',c:['SAY YES','TRUE LOVE','LOVE LOVE LOVE','世界に一つだけの花'],a:0,m:'CHAGE and ASKAの大ヒット曲。1991年。'},
-  {type:'ox',q:'チューリップ「サボテンの花」は、ドラマ「東京ラブストーリー」で再びヒットした。',a:false,m:'正しくはドラマ「ひとつ屋根の下」（1993年）の主題歌として再ヒットした。'},
-  {type:'4',q:'木村拓哉・山口智子主演「ロングバケーション」の主題歌は？',c:['LA・LA・LA LOVE SONG','TRUE LOVE','SAY YES','負けないで'],a:0,m:'久保田利伸が歌った。1996年。'},
-  {type:'4',q:'久保田早紀「異邦人」がCMソングに使われたのは、どの分野の企業？',c:['家電（三洋電機）','自動車','飲料','航空会社'],a:0,m:'CM起用で一気に知名度が上がった。'},
-  {type:'ox',q:'寺尾聰「ルビーの指環」は、日本レコード大賞で大賞のほか作曲賞・編曲賞・作詩賞も独占した。',a:true,m:'第23回（1981年）。史上初の独占受賞とされる。'},
-  {type:'4',q:'美空ひばり「川の流れのように」の作詞を手がけたのは？',c:['秋元康','松本隆','阿久悠','なかにし礼'],a:0,m:'1989年。ひばり最後のシングル。'},
-  {type:'4',q:'山下達郎「クリスマス・イブ」が長年CMに使われた企業・分野は？',c:['鉄道（JR東海）','化粧品','ビール','銀行'],a:0,m:'冬の定番ソングとして定着した。'},
-  {type:'ox',q:'サザンオールスターズ「TSUNAMI」は日本レコード大賞を受賞した。',a:true,m:'2000年・第42回。'},
-  {type:'4',q:'安全地帯「ワインレッドの心」がCMに使われた分野は？',c:['飲料（サントリー）','自動車','家電','旅行'],a:0,m:'1983年。CMから人気に火がついた。'},
-  {type:'4',q:'山口百恵「いい日旅立ち」が使われたキャンペーンは？',c:['国鉄（鉄道）','航空会社','百貨店','銀行'],a:0,m:'谷村新司の作詞・作曲。旅情あふれる名曲。'},
-  {type:'ox',q:'「世界に一つだけの花」は、もともとSMAPのアルバム曲がシングル化されて大ヒットした。',a:true,m:'2003年。槇原敬之の作詞・作曲。'},
-  {type:'4',q:'米米CLUB「浪漫飛行」が再ヒットするきっかけとなったCMの分野は？',c:['航空（JAL）','自動車','飲料','家電'],a:0,m:'沖縄キャンペーンのCMで人気が再燃した。'},
-  {type:'4',q:'Mr.Children「innocent world」が受賞したのは？',c:['日本レコード大賞','直木賞','本屋大賞','菊池寛賞'],a:0,m:'1994年・第36回日本レコード大賞。'},
-  {type:'ox',q:'「贈る言葉」を歌った海援隊には、俳優としても活躍する武田鉄矢が在籍している。',a:true,m:'武田鉄矢は「金八先生」で教師役も演じた。'},
-  {type:'4',q:'DREAMS COME TRUE「LOVE LOVE LOVE」の主題歌ドラマは？',c:['愛していると言ってくれ','東京ラブストーリー','あすなろ白書','ロングバケーション'],a:0,m:'1995年。常盤貴子・豊川悦司主演。'},
-  {type:'4',q:'尾崎紀世彦「また逢う日まで」が受賞したのは？',c:['日本レコード大賞','アカデミー賞','グラミー賞','ノーベル賞'],a:0,m:'1971年・第13回。'},
-  {type:'ox',q:'井上陽水「少年時代」は、テレビアニメの主題歌として作られた曲である。',a:false,m:'同名の実写映画（1990年公開）の主題歌。'},
-  {type:'4',q:'昭和の歌のヒットを支えた、TBSの人気音楽番組は？',c:['ザ・ベストテン','紅白歌合戦','Mステ','カウントダウンTV'],a:0,m:'ランキング形式で多くの名曲を世に送り出した。'},
-  {type:'4',q:'八代亜紀「雨の慕情」が受賞したのは？',c:['日本レコード大賞','本屋大賞','日本アカデミー賞','芥川賞'],a:0,m:'1980年・第22回。'},
-  {type:'ox',q:'藤井フミヤ「TRUE LOVE」は1980年代のドラマ主題歌として大ヒットした。',a:false,m:'1993年「あすなろ白書」主題歌。1990年代のヒット。'},
-  {type:'4',q:'毎年大晦日に放送され、その年のヒット曲が披露される国民的番組は？',c:['NHK紅白歌合戦','ザ・ベストテン','夜のヒットスタジオ','レコード大賞のみ'],a:0,m:'多くの歌手にとって出場が大きな目標とされた。'},
-],
+<!-- feedback toast -->
+<div class="toast" id="toast"><div class="big" id="toastBig"></div><div class="small" id="toastSmall"></div></div>
+
+<!-- ポータル共通：花丸スタンプ送信 -->
+<script src="https://pecpec37-gift.github.io/portal/stamp.js"></script>
+
+<script>
+/* =========================================================
+   昭和・平成 名曲クイズ道場／早押しクイズ道場 シリーズ
+   - 4択 + ○× ミックス / 10問ランダム出題
+   - タイプライター → 回答する！ → 選択肢 → 色付け → 問題文フェードイン
+     → 0.6秒後に正誤オーバーレイ → 次の問題へでトースト消去
+   - 60秒 + 残り時間ボーナス / 正解+10点+5秒 / 不正解-5秒
+   - 4択は表示時にシャッフル（正解位置の偏り防止）
+   - ○× は ◯/✕ の並びを固定（プール内で正誤を均等化）
+   - ジャンル別ローカルランキング(localStorage) / 間違い復習
+   - canvas背景の動的リサイズ
+   ========================================================= */
+
+const TOTAL_Q   = 10;
+const START_TIME= 60;
+const MAX_TIME  = 90;      /* +5秒で多少伸びる余地（60秒制限）*/
+const TYPING_SPEED = 120;  /* ms / 文字（早押しタイプ速度）*/
+const STORAGE_KEY = 'showa_heisei_songs_quiz_dojo_ranking_v1';
+const STAMP_GAME_ID = 'showa-heisei-songs-quiz-dojo';  /* ポータル花丸スタンプ用ID（GitHubリポジトリ名と一致）*/
+
+/* ---------- 問題データ ----------
+   4択 : {q, a:正解, w:[誤答3つ], e:解説}
+   ○× : {q, ox:true/false, e:解説}
+*/
+const QUIZ = {
+  folk:{
+    name:"昭和フォーク・ニューミュージック", ji:"🎸",
+    desc:"なごり雪・卒業写真・少年時代・神田川 など",
+    pool:[
+      {q:"「なごり雪」を歌って大ヒットさせた、フォークシンガーは？", a:"イルカ", w:["五輪真弓","森山良子","南こうせつ"], e:"原曲はかぐや姫。伊勢正三が作詞・作曲し、イルカのカバーが1975年に大ヒットした。"},
+      {q:"「なごり雪」の作詞・作曲は、伊勢正三である。", ox:true, e:"かぐや姫のメンバー伊勢正三の作。21歳で書いた初のプロ作品とされる。"},
+      {q:"「岬めぐり」を歌ったのは？", a:"山本コータローとウィークエンド", w:["チューリップ","かぐや姫","風"], e:"1974年のヒット曲。"},
+      {q:"「卒業写真」を作詞・作曲・歌唱したのは？", a:"荒井由実", w:["太田裕美","竹内まりや","中島みゆき"], e:"1975年。ハイ・ファイ・セットのカバーでも親しまれた。"},
+      {q:"「サボテンの花」を歌ったバンドと、その中心人物は？", a:"チューリップ", w:["オフコース","アリス","ガロ"], e:"1975年。1993年にドラマ「ひとつ屋根の下」で再び大ヒットした。"},
+      {q:"井上陽水の「少年時代」は、同名映画の主題歌として作られた曲である。", ox:true, e:"1990年。藤子不二雄Ⓐ原作の映画「少年時代」の主題歌。"},
+      {q:"「少年時代」を歌ったのは？", a:"井上陽水", w:["吉田拓郎","さだまさし","小椋佳"], e:"井上陽水の代表曲のひとつ。"},
+      {q:"デビュー曲「異邦人」を歌ったのは？", a:"久保田早紀", w:["八神純子","庄野真代","大貫妙子"], e:"1979年。サブタイトルは「シルクロードのテーマ」。"},
+      {q:"「異邦人」は、テレビCMに使われたことでも話題になった。", ox:true, e:"三洋電機のテレビCMソングに起用され大ヒットした。"},
+      {q:"フォークグループ「風」の代表曲「22才の別れ」。中心メンバーは？", a:"伊勢正三", w:["南こうせつ","かまやつひろし","北山修"], e:"かぐや姫解散後、伊勢正三が大久保一久と結成したのが「風」。"},
+      {q:"「神田川」を歌ったフォークグループは？", a:"かぐや姫", w:["赤い鳥","ガロ","チェリッシュ"], e:"1973年。作詞・喜多条忠、作曲・南こうせつ。"},
+      {q:"「翼をください」は、もともと中島みゆきが歌った曲である。", ox:false, e:"正しくは「赤い鳥」が1971年に歌った曲。合唱曲としても親しまれる。"},
+      {q:"ユーミン（荒井由実）が作詞・作曲し、バンバンが歌ってヒットした曲は？", a:"「いちご白書」をもう一度", w:["学生街の喫茶店","あの日にかえりたい","冷たい雨"], e:"1975年。学生運動の余韻を描いた青春ソング。"},
+      {q:"「学生街の喫茶店」を歌ったグループは？", a:"ガロ", w:["チューリップ","かぐや姫","トワ・エ・モワ"], e:"1972年発売。翌年にかけて大ヒットした。"},
+      {q:"「結婚しようよ」で“フォークの貴公子”と呼ばれたシンガーは？", a:"よしだたくろう", w:["井上陽水","小椋佳","泉谷しげる"], e:"1972年。フォークがお茶の間に広まる契機となった。"},
+      {q:"アリスの代表曲「冬の稲妻」。ボーカルの一人で「昴」も歌ったのは？", a:"谷村新司", w:["堀内孝雄","矢沢永吉","チャゲ"], e:"アリスは谷村新司・堀内孝雄・矢沢透の3人組。"},
+      {q:"「少年時代」は1980年代に発表された曲である。", ox:false, e:"発表は1990年。平成に入ってからのヒット。"},
+      {q:"チェリッシュ、トワ・エ・モワ、ヒデとロザンナに共通する編成は？", a:"男女ペア", w:["3人組","4人バンド","ソロ"], e:"いずれも昭和を代表する男女デュオ。"},
+      {q:"さだまさしが在籍していたフォークデュオは？", a:"グレープ", w:["風","ふきのとう","チューリップ"], e:"「精霊流し」などで知られるグレープ。後にソロで活躍。"},
+      {q:"「なごり雪」の原曲を歌ったのは「かぐや姫」である。", ox:true, e:"1974年、アルバム収録曲として発表。イルカのカバーで広く知られた。"},
+      {q:"「精霊流し」「関白宣言」で知られるシンガーソングライターは？", a:"さだまさし", w:["松山千春","長渕剛","武田鉄矢"], e:"語りかけるような歌詞で人気を集めた。"},
+      {q:"「恋」「季節の中で」など、北海道出身で知られるフォーク／ニューミュージック歌手は？", a:"松山千春", w:["長渕剛","財津和夫","南こうせつ"], e:"伸びやかな高音が持ち味。"},
+      {q:"「卒業写真」は、太田裕美が作詞・作曲した曲である。", ox:false, e:"作詞・作曲は荒井由実（松任谷由実）。多くの歌手にカバーされた。"},
+      {q:"オフコースの中心人物で、後に「ラブ・ストーリーは突然に」を歌ったのは？", a:"小田和正", w:["鈴木康博","財津和夫","大野克夫"], e:"澄んだ高音が代名詞。"},
+      {q:"森田公一とトップギャランの大ヒット曲は？", a:"青春時代", w:["岬めぐり","学生街の喫茶店","遠くで汽笛を聞きながら"], e:"1976年。世代を超えて歌われる青春ソング。"},
+      {q:"「岬めぐり」は1990年代のヒット曲である。", ox:false, e:"1974年（昭和49年）のヒット。山本コータローとウィークエンドが歌った。"},
+    ]
+  },
+  kayo:{
+    name:"昭和歌謡・アイドル", ji:"🎤",
+    desc:"木綿のハンカチーフ・勝手にしやがれ・赤いスイートピー など",
+    pool:[
+      {q:"「木綿のハンカチーフ」を歌ったのは？", a:"太田裕美", w:["岩崎宏美","桜田淳子","南沙織"], e:"1975年。作詞・松本隆、作曲・筒美京平のヒットコンビ作。"},
+      {q:"「木綿のハンカチーフ」は、男女の手紙のやりとり（対話）で進む歌詞が特徴である。", ox:true, e:"都会へ出た男性と故郷の女性の掛け合いが描かれる。"},
+      {q:"沢田研二の「勝手にしやがれ」。この曲が獲得した大きな賞は？", a:"日本レコード大賞", w:["アカデミー賞","直木賞","グラミー賞"], e:"1977年・第19回日本レコード大賞を受賞。"},
+      {q:"寺尾聰「ルビーの指環」が日本レコード大賞を受賞したのは？", a:"1981年", w:["1971年","1991年","2001年"], e:"第23回。大賞・作曲賞・編曲賞・作詩賞を独占した。"},
+      {q:"「ルビーの指環」の作詞は松本隆である。", ox:true, e:"寺尾聰自身が作曲、松本隆が作詞を手がけた。"},
+      {q:"松田聖子「赤いスイートピー」の作詞を手がけたのは？", a:"松本隆", w:["阿久悠","なかにし礼","秋元康"], e:"1982年。作曲は呉田軽穂（松任谷由実の別名義）。"},
+      {q:"尾崎紀世彦の「また逢う日まで」。この曲は何の賞を受賞した？", a:"日本レコード大賞", w:["ノーベル賞","本屋大賞","菊池寛賞"], e:"1971年・第13回日本レコード大賞を受賞。"},
+      {q:"八代亜紀「雨の慕情」が日本レコード大賞を受賞したのは？", a:"1980年", w:["1970年","1990年","1985年"], e:"第22回。演歌の名曲として知られる。"},
+      {q:"「時の流れに身をまかせ」を歌った、台湾出身の歌手は？", a:"テレサ・テン", w:["欧陽菲菲","アグネス・チャン","ジュディ・オング"], e:"「つぐない」「愛人」とともに代表曲。"},
+      {q:"ピンク・レディーの「UFO」は日本レコード大賞を受賞した。", ox:true, e:"1978年・第20回日本レコード大賞を受賞。"},
+      {q:"「春一番」「年下の男の子」で人気を集めたアイドルグループは？", a:"キャンディーズ", w:["ピンク・レディー","ザ・ピーナッツ","三人娘"], e:"「普通の女の子に戻りたい」の解散宣言でも知られる。"},
+      {q:"「津軽海峡冬景色」を歌った演歌歌手は？", a:"石川さゆり", w:["八代亜紀","都はるみ","坂本冬美"], e:"1977年。作詞・阿久悠、作曲・三木たかし。"},
+      {q:"山口百恵の「いい日旅立ち」は、阿久悠が作詞・作曲した曲である。", ox:false, e:"作詞・作曲は谷村新司。国鉄キャンペーンソングとして知られる。"},
+      {q:"デビュー曲「スローモーション」、ヒット曲「セカンド・ラブ」で知られるのは？", a:"中森明菜", w:["松田聖子","小泉今日子","薬師丸ひろ子"], e:"1982年デビュー。80年代を代表するアイドル。"},
+      {q:"中森明菜「飾りじゃないのよ涙は」の作詞・作曲を手がけたのは？", a:"井上陽水", w:["松本隆","来生たかお","尾崎豊"], e:"井上陽水の提供曲。1984年。"},
+      {q:"「喝采」で日本レコード大賞を受賞した歌手は？", a:"ちあきなおみ", w:["八代亜紀","都はるみ","森昌子"], e:"1972年・第14回。ドラマ性のある歌唱で知られた。"},
+      {q:"「勝手にしやがれ」を歌ったのは沢田研二である。", ox:true, e:"“ジュリー”の愛称で親しまれた。帽子を使った振付も有名。"},
+      {q:"森昌子・桜田淳子・山口百恵の3人をまとめて呼んだ言葉は？", a:"花の中三トリオ", w:["三人娘","新御三家","ニューミュージック"], e:"同学年でデビューした人気アイドル3人。"},
+      {q:"郷ひろみ・西城秀樹・野口五郎の3人を指す呼び名は？", a:"新御三家", w:["花の中三トリオ","たのきんトリオ","三羽烏"], e:"1970年代を代表する男性アイドル。"},
+      {q:"「およげ！たいやきくん」が記録的に売れたのは何年代？", a:"1970年代", w:["1960年代","1980年代","1990年代"], e:"1975〜76年。子門真人の歌唱で社会現象に。"},
+      {q:"松田聖子「赤いスイートピー」の作詞は、阿久悠である。", ox:false, e:"作詞は松本隆、作曲は松任谷由実（呉田軽穂名義）。"},
+      {q:"美空ひばりの最後のシングルとなった名曲は？", a:"川の流れのように", w:["愛燦燦","悲しい酒","柔"], e:"1989年。作詞・秋元康。"},
+      {q:"「およげ！たいやきくん」のように、子ども向けでも大人に親しまれた歌が多いのはどの時代？", a:"昭和", w:["令和","平成後期","大正"], e:"お茶の間でテレビと共に歌が広まった時代。"},
+      {q:"「また逢う日まで」は1980年代の日本レコード大賞受賞曲である。", ox:false, e:"受賞は1971年（第13回）。1970年代の受賞曲。"},
+      {q:"「与作」などで知られ、長く演歌界をけん引した男性歌手は？", a:"北島三郎", w:["五木ひろし","森進一","村田英雄"], e:"“サブちゃん”の愛称で親しまれた。"},
+      {q:"「およげ！たいやきくん」「およげ」のような大ヒットを生む、昭和の音楽の主な普及経路は？", a:"テレビの歌番組", w:["動画配信","サブスク","SNS"], e:"「ザ・ベストテン」など歌番組がヒットを生んだ。"},
+    ]
+  },
+  eighties:{
+    name:"80年代ポップス・バンド", ji:"🎹",
+    desc:"フレンズ・Romanticが止まらない・恋におちて など",
+    pool:[
+      {q:"「君は1000%」を歌ったグループは？", a:"1986オメガトライブ", w:["C-C-B","チェッカーズ","TUBE"], e:"1986年。爽やかなシティポップ系サウンド。"},
+      {q:"「Romanticが止まらない」を歌ったのは？", a:"C-C-B", w:["レベッカ","BARBEE BOYS","シャネルズ"], e:"1985年。ピンクや赤の髪が印象的なバンド。"},
+      {q:"C-C-Bの「Romanticが止まらない」は、テレビドラマで使われて人気が高まった。", ox:true, e:"ドラマ「毎度おさわがせします」で使用され話題に。"},
+      {q:"「フレンズ」を歌った、NOKKOがボーカルのバンドは？", a:"レベッカ", w:["プリンセス プリンセス","SHOW-YA","BARBEE BOYS"], e:"1985年。80年代バンドブームを代表する曲。"},
+      {q:"デビュー曲「恋におちて -Fall in love-」を歌ったのは？", a:"小林明子", w:["中村あゆみ","杏里","大貫妙子"], e:"1985年。TBSドラマ「金曜日の妻たちへIII」主題歌。"},
+      {q:"「恋におちて -Fall in love-」は、ドラマ「金曜日の妻たちへIII」の主題歌だった。", ox:true, e:"“金妻”ブームを象徴する一曲。作詞は湯川れい子。"},
+      {q:"女性ボーカル・奥居香（岸谷香）の「Diamonds」を歌ったバンドは？", a:"プリンセス プリンセス", w:["レベッカ","SHOW-YA","ZELDA"], e:"1989年。「M」も同年の代表曲。"},
+      {q:"チェッカーズのボーカルで、後にソロで「TRUE LOVE」を歌ったのは？", a:"藤井フミヤ", w:["吉川晃司","尾崎豊","佐野元春"], e:"チェッカーズ解散後にソロ活動を本格化。"},
+      {q:"安全地帯「ワインレッドの心」の作詞を手がけたのは？", a:"井上陽水", w:["松本隆","売野雅勇","秋元康"], e:"1983年。ボーカルは玉置浩二。"},
+      {q:"安全地帯のボーカルは玉置浩二である。", ox:true, e:"「ワインレッドの心」「恋の予感」などを歌った。"},
+      {q:"渡辺美里「My Revolution」の作曲を手がけ、後に一時代を築いたのは？", a:"小室哲哉", w:["筒美京平","坂本龍一","大村雅朗"], e:"1986年。小室哲哉のヒットメーカーとしての出発点の一つ。"},
+      {q:"アニメ「シティーハンター」のエンディングで人気を博した、TM NETWORKの曲は？", a:"Get Wild", w:["Self Control","Beyond the Time","Come on Let’s Dance"], e:"1987年。小室哲哉・宇都宮隆・木根尚登の3人組。"},
+      {q:"「翼の折れたエンジェル」を歌った女性シンガーは？", a:"中村あゆみ", w:["レベッカ NOKKO","浜田麻里","本田美奈子"], e:"1985年のヒット曲。"},
+      {q:"尾崎豊の「15の夜」「卒業」は、若者の心情を歌った1980年代の楽曲である。", ox:true, e:"10代の葛藤を描いた歌詞で熱狂的な支持を得た。"},
+      {q:"「ギンギラギンにさりげなく」を歌った、たのきんトリオの一人は？", a:"近藤真彦", w:["田原俊彦","野村義男","少年隊"], e:"“マッチ”の愛称で人気。"},
+      {q:"チェッカーズの初期ヒット曲といえば？", a:"ギザギザハートの子守唄", w:["ガラスの十代","勝手にシンドバッド","SHAKE"], e:"福岡出身の7人組バンド。"},
+      {q:"「フレンズ」を歌ったレベッカのボーカルは渡辺美里である。", ox:false, e:"レベッカのボーカルはNOKKO。渡辺美里は「My Revolution」など。"},
+      {q:"「待つわ」で知られ、ポプコン出身の女性デュオは？", a:"あみん", w:["ピンク・レディー","チェリッシュ","Wink"], e:"1982年の大ヒット。岡村孝子と加藤晴子の2人組。"},
+      {q:"杉山清貴&オメガトライブの代表曲で、夏の定番となったのは？", a:"サマー・サスピション", w:["君は1000%","TRUE LOVE","スコール"], e:"1983年。リゾート感あるサウンドで人気。"},
+      {q:"「君は1000%」は1970年代のヒット曲である。", ox:false, e:"1986年のヒット。1986オメガトライブが歌った。"},
+      {q:"「夏の扉」「青い珊瑚礁」など、80年代前半に次々とヒットを放ったアイドルは？", a:"松田聖子", w:["中森明菜","小泉今日子","河合奈保子"], e:"“聖子ちゃんカット”も社会現象に。"},
+      {q:"男女混成バンドBARBEE BOYS（バービーボーイズ）が活躍したのは主にどの年代？", a:"1980年代", w:["1960年代","2000年代","2010年代"], e:"掛け合いボーカルが特徴のバンド。"},
+      {q:"「Get Wild」を歌ったTM NETWORKは、女性デュオである。", ox:false, e:"小室哲哉・宇都宮隆・木根尚登の男性3人組。「シティーハンター」EDで人気。"},
+      {q:"「め組のひと」で知られるグループは？", a:"ラッツ&スター", w:["C-C-B","BARBEE BOYS","米米CLUB"], e:"鈴木雅之が在籍したことでも知られる。"},
+      {q:"吉川晃司、佐野元春、尾崎豊らに共通するのは？", a:"80年代に人気を集めた男性シンガー", w:["演歌歌手","女性アイドル","クラシック奏者"], e:"いずれもロック／ポップス系の男性アーティスト。"},
+      {q:"プリンセス プリンセスは女性だけのバンドである。", ox:true, e:"「Diamonds」「M」などのヒットで知られる。"},
+    ]
+  },
+  heisei:{
+    name:"平成J-POP黄金期", ji:"💿",
+    desc:"TRUE LOVE・負けないで・ロビンソン・世界に一つだけの花 など",
+    pool:[
+      {q:"藤井フミヤ「TRUE LOVE」の主題歌に使われたフジテレビのドラマは？", a:"あすなろ白書", w:["東京ラブストーリー","101回目のプロポーズ","ロングバケーション"], e:"1993年。月9ドラマの主題歌として大ヒットした。"},
+      {q:"DREAMS COME TRUE「LOVE LOVE LOVE」の主題歌となったドラマは？", a:"愛していると言ってくれ", w:["ロングバケーション","北の国から","ひとつ屋根の下"], e:"1995年。ドリカム最大のヒット曲の一つ。"},
+      {q:"SMAP「世界に一つだけの花」の作詞・作曲を手がけたのは？", a:"槇原敬之", w:["小室哲哉","つんく♂","桜井和寿"], e:"2003年。「ナンバーワンよりオンリーワン」のメッセージで国民的ヒットに。"},
+      {q:"「負けないで」を歌ったのはZARDである。", ox:true, e:"1993年。ボーカルは坂井泉水。応援ソングの定番。"},
+      {q:"スピッツ「ロビンソン」が大ヒットしたのは何年代？", a:"1990年代", w:["1970年代","1980年代","2010年代"], e:"1995年。バンドの知名度を一気に押し上げた。"},
+      {q:"「涙そうそう」を歌い、全国的な大ヒットにした沖縄出身の歌手は？", a:"夏川りみ", w:["THE BOOM","BEGIN","安室奈美恵"], e:"2001年に発売、翌年以降ロングヒット。"},
+      {q:"「涙そうそう」は、夏川りみ自身が作詞・作曲した曲である。", ox:false, e:"作詞は森山良子、作曲はBEGIN。夏川りみの歌唱で大ヒットした。"},
+      {q:"玉置浩二「田園」が発表されたのは何年代？", a:"1990年代", w:["1970年代","1980年代","2000年代"], e:"1996年。力強い応援ソング。"},
+      {q:"DREAMS COME TRUE「未来予想図II」のボーカルは？", a:"吉田美和", w:["坂井泉水","岡本真夜","広瀬香美"], e:"1990年。結婚式の定番ソングとしても人気。"},
+      {q:"CHAGE and ASKA「SAY YES」の主題歌となったドラマは？", a:"101回目のプロポーズ", w:["東京ラブストーリー","あすなろ白書","すいか"], e:"1991年。武田鉄矢主演ドラマの主題歌で大ヒット。"},
+      {q:"「世界に一つだけの花」を歌ったのはSMAPである。", ox:true, e:"2003年。シングルも記録的なセールスを残した。"},
+      {q:"久保田利伸「LA・LA・LA LOVE SONG」の主題歌となったドラマは？", a:"ロングバケーション", w:["あすなろ白書","ビーチボーイズ","ひとつ屋根の下"], e:"1996年。木村拓哉・山口智子主演の月9。"},
+      {q:"「どんなときも。」を歌った、後に「世界に一つだけの花」を書いたのは？", a:"槇原敬之", w:["藤井フミヤ","大事MANブラザーズバンド","小田和正"], e:"1991年。映画「就職戦線異状なし」主題歌。"},
+      {q:"Mr.Childrenの「innocent world」は日本レコード大賞を受賞した。", ox:true, e:"1994年・第36回日本レコード大賞を受賞。"},
+      {q:"サザンオールスターズ「TSUNAMI」が日本レコード大賞を受賞したのは何年？", a:"2000年", w:["1990年","1995年","2005年"], e:"第42回日本レコード大賞を受賞。"},
+      {q:"福山雅治の代表的バラードといえば？", a:"桜坂", w:["TSUNAMI","ロビンソン","田園"], e:"2000年。落ち着いたメロディが人気。"},
+      {q:"ZARDのボーカルは広瀬香美である。", ox:false, e:"ZARDのボーカルは坂井泉水。「揺れる想い」「負けないで」などを歌った。"},
+      {q:"H Jungle with t「WOW WAR TONIGHT」で歌ったお笑い芸人は？", a:"浜田雅功", w:["松本人志","とんねるず","ウッチャンナンチャン"], e:"1995年。小室哲哉プロデュースで大ヒット。"},
+      {q:"スピッツのボーカルは？", a:"草野マサムネ", w:["桜井和寿","吉田美和","岡本真夜"], e:"独特の高音と詩的な歌詞が魅力。"},
+      {q:"「負けないで」は2000年代のヒット曲である。", ox:false, e:"1993年のヒット。ZARD（坂井泉水）が歌った。"},
+      {q:"「LA・LA・LA LOVE SONG」を歌った、ファンク／ソウル色の強い男性シンガーは？", a:"久保田利伸", w:["藤井フミヤ","玉置浩二","槇原敬之"], e:"「ミッシング」なども代表曲。"},
+      {q:"globe、TRF、安室奈美恵らを手がけ、90年代に旋風を起こしたプロデューサーは？", a:"小室哲哉", w:["つんく♂","秋元康","小林武史"], e:"いわゆる“小室ファミリー”を率いた。"},
+      {q:"Mr.Childrenのボーカルは桜井和寿である。", ox:true, e:"「Tomorrow never knows」「innocent world」などで知られる。"},
+      {q:"1993年に大ヒットした、THE 虎舞竜のロングバラードは？", a:"ロード", w:["TSUNAMI","負けないで","SAY YES"], e:"切ない歌詞で話題になった。"},
+      {q:"「DEPARTURES」「Can’t Stop Fallin’ in Love」などで知られる、小室哲哉のユニットは？", a:"globe", w:["TRF","trf","dos"], e:"KEIKOらが在籍。1990年代後半に活躍。"},
+      {q:"「田園」を歌った玉置浩二は、安全地帯のボーカルでもある。", ox:true, e:"バンドとソロの両方で活躍した。"},
+    ]
+  },
+  artist:{
+    name:"歌手・アーティスト物語", ji:"🎶",
+    desc:"サザン・ユーミン・中島みゆき・竹内まりや・テレサ・テン など",
+    pool:[
+      {q:"サザンオールスターズのボーカル・中心人物は？", a:"桑田佳祐", w:["山下達郎","佐野元春","財津和夫"], e:"「いとしのエリー」「TSUNAMI」など多数のヒットを生んだ。"},
+      {q:"サザンオールスターズのデビュー曲は？", a:"勝手にシンドバッド", w:["いとしのエリー","TSUNAMI","チャコの海岸物語"], e:"1978年デビュー。"},
+      {q:"「いとしのエリー」はサザンオールスターズの曲である。", ox:true, e:"1979年。バラードの代表曲。"},
+      {q:"「時代」「糸」「地上の星」などで知られるシンガーソングライターは？", a:"中島みゆき", w:["松任谷由実","竹内まりや","森山良子"], e:"数多くのアーティストに楽曲を提供したことでも有名。"},
+      {q:"中島みゆき「地上の星」は、NHKの番組「プロジェクトX」の主題歌として広く知られた。", ox:true, e:"長期にわたりロングヒットを記録した。"},
+      {q:"「駅」「元気を出して」などを作り、夫は山下達郎であるシンガーソングライターは？", a:"竹内まりや", w:["松任谷由実","中島みゆき","大貫妙子"], e:"自身の歌唱でも他歌手への提供でも活躍。"},
+      {q:"荒井由実から改姓した「松任谷由実」の愛称は？", a:"ユーミン", w:["ピンキー","アッコ","レミ"], e:"結婚を機に松任谷姓に。日本のニューミュージックを代表する存在。"},
+      {q:"松任谷由実の代表曲「春よ、来い」が発表されたのは何年代？", a:"1990年代", w:["1970年代","1980年代","2000年代"], e:"1994年。同名ドラマの主題歌にもなった。"},
+      {q:"「つぐない」「愛人」「時の流れに身をまかせ」で日本でも国民的人気を得た歌手は？", a:"テレサ・テン", w:["欧陽菲菲","アグネス・チャン","ジュディ・オング"], e:"台湾出身。アジア各地で愛された。"},
+      {q:"DREAMS COME TRUE（ドリカム）の女性ボーカルは坂井泉水である。", ox:false, e:"ドリカムの女性ボーカルは吉田美和。坂井泉水はZARD。"},
+      {q:"今井美樹「PRIDE」の作詞・作曲を手がけ、のちに夫となったのは？", a:"布袋寅泰", w:["吉川晃司","玉置浩二","藤井フミヤ"], e:"1996年。BOØWYのギタリストとしても有名。"},
+      {q:"「乾杯」「とんぼ」などで知られる、骨太な歌声のシンガーは？", a:"長渕剛", w:["松山千春","さだまさし","武田鉄矢"], e:"結婚式の定番「乾杯」で広く親しまれた。"},
+      {q:"「乾杯」は長渕剛の楽曲である。", ox:true, e:"結婚や門出の場で歌われる定番ソング。"},
+      {q:"アリスのメンバーで、ソロでも「昴」「いい日旅立ち（提供）」を手がけたのは？", a:"谷村新司", w:["堀内孝雄","チャゲ","飛鳥"], e:"スケールの大きな楽曲で知られた。"},
+      {q:"井上陽水が他の歌手に提供した代表曲は？", a:"飾りじゃないのよ涙は（中森明菜）", w:["勝手にしやがれ（沢田研二）","異邦人（久保田早紀）","異邦人"], e:"陽水は自作のほか提供曲でもヒットを生んだ。"},
+      {q:"竹内まりやの夫は、シンガーソングライターの山下達郎である。", ox:true, e:"山下達郎は「クリスマス・イブ」などで知られる。"},
+      {q:"「クリスマス・イブ」で知られ、シティポップの第一人者とされるのは？", a:"山下達郎", w:["大滝詠一","佐野元春","杉山清貴"], e:"JR東海のCMでも長く使われた。"},
+      {q:"チューリップの中心人物で、「サボテンの花」「青春の影」を歌ったのは？", a:"財津和夫", w:["小田和正","谷村新司","南こうせつ"], e:"メロディメーカーとして高く評価される。"},
+      {q:"スピッツのボーカルは桜井和寿である。", ox:false, e:"スピッツのボーカルは草野マサムネ。桜井和寿はMr.Children。"},
+      {q:"「川の流れのように」を歌い、“歌謡界の女王”と称されたのは？", a:"美空ひばり", w:["島倉千代子","都はるみ","八代亜紀"], e:"昭和を代表する大歌手。"},
+      {q:"ZARDのボーカル・坂井泉水の代表的なイメージとして正しいのは？", a:"力強い応援ソングを多く歌った", w:["演歌一筋だった","ラップが中心だった","クラシック歌手だった"], e:"「負けないで」「揺れる想い」など前向きな楽曲が多い。"},
+      {q:"松任谷由実は、荒井由実時代に「卒業写真」を発表している。", ox:true, e:"結婚を機に「松任谷由実」へ改名した。"},
+      {q:"「異邦人」の久保田早紀、「待つわ」のあみん。両者に共通するのは？", a:"女性アーティスト", w:["演歌歌手","男性デュオ","海外出身"], e:"いずれも昭和後期の女性アーティスト。"},
+      {q:"桑田佳祐がボーカルを務めるバンドは？", a:"サザンオールスターズ", w:["TUBE","米米CLUB","チェッカーズ"], e:"夏の名曲を数多く生んだ。"},
+      {q:"テレサ・テンは韓国出身の歌手である。", ox:false, e:"テレサ・テンは台湾出身。アジア各地で広く愛された。"},
+      {q:"「ひこうき雲」「やさしさに包まれたなら」などを手がけたのは？", a:"松任谷由実", w:["竹内まりや","中島みゆき","大貫妙子"], e:"映画やCMでも楽曲が使われ続けている。"},
+    ]
+  },
+  tieup:{
+    name:"主題歌・CM・受賞・紅白", ji:"📺",
+    desc:"レコード大賞・ドラマ/CMタイアップ・紅白エピソード など",
+    pool:[
+      {q:"海援隊「贈る言葉」の主題歌となったテレビドラマは？", a:"3年B組金八先生", w:["スクール☆ウォーズ","熱中時代","北の国から"], e:"1979年。武田鉄矢が在籍する海援隊の代表曲。"},
+      {q:"「贈る言葉」は卒業・別れの場面で歌われる定番曲である。", ox:true, e:"ドラマ「3年B組金八先生」の主題歌として広まった。"},
+      {q:"日本レコード大賞を受賞していない曲はどれ？", a:"なごり雪", w:["勝手にしやがれ","ルビーの指環","また逢う日まで"], e:"「なごり雪」は大賞受賞曲ではない。他の3曲は受賞曲。"},
+      {q:"TBSドラマ「金曜日の妻たちへIII」の主題歌は？", a:"恋におちて -Fall in love-", w:["TRUE LOVE","SAY YES","LOVE LOVE LOVE"], e:"小林明子が歌い、“金妻ブーム”を象徴した。"},
+      {q:"フジテレビ「あすなろ白書」の主題歌は？", a:"TRUE LOVE", w:["SAY YES","ロビンソン","負けないで"], e:"藤井フミヤのソロデビュー曲。1993年。"},
+      {q:"武田鉄矢主演「101回目のプロポーズ」の主題歌は？", a:"SAY YES", w:["TRUE LOVE","LOVE LOVE LOVE","世界に一つだけの花"], e:"CHAGE and ASKAの大ヒット曲。1991年。"},
+      {q:"チューリップ「サボテンの花」は、ドラマ「東京ラブストーリー」で再びヒットした。", ox:false, e:"正しくはドラマ「ひとつ屋根の下」（1993年）の主題歌として再ヒットした。"},
+      {q:"木村拓哉・山口智子主演「ロングバケーション」の主題歌は？", a:"LA・LA・LA LOVE SONG", w:["TRUE LOVE","SAY YES","負けないで"], e:"久保田利伸が歌った。1996年。"},
+      {q:"久保田早紀「異邦人」がCMソングに使われたのは、どの分野の企業？", a:"家電", w:["自動車","飲料","航空会社"], e:"CM起用で一気に知名度が上がった。"},
+      {q:"寺尾聰「ルビーの指環」は、日本レコード大賞で大賞のほか作曲賞・編曲賞・作詩賞も独占した。", ox:true, e:"第23回（1981年）。史上初の独占受賞とされる。"},
+      {q:"美空ひばり「川の流れのように」の作詞を手がけたのは？", a:"秋元康", w:["松本隆","阿久悠","なかにし礼"], e:"1989年。ひばり最後のシングル。"},
+      {q:"山下達郎「クリスマス・イブ」が長年CMに使われた企業・分野は？", a:"鉄道", w:["化粧品","ビール","銀行"], e:"冬の定番ソングとして定着した。"},
+      {q:"サザンオールスターズ「TSUNAMI」は日本レコード大賞を受賞した。", ox:true, e:"2000年・第42回。"},
+      {q:"安全地帯「ワインレッドの心」がCMに使われた分野は？", a:"飲料", w:["自動車","家電","旅行"], e:"1983年。CMから人気に火がついた。"},
+      {q:"山口百恵「いい日旅立ち」が使われたキャンペーンは？", a:"国鉄", w:["航空会社","百貨店","銀行"], e:"谷村新司の作詞・作曲。旅情あふれる名曲。"},
+      {q:"「世界に一つだけの花」は、もともとSMAPのアルバム曲がシングル化されて大ヒットした。", ox:true, e:"2003年。槇原敬之の作詞・作曲。"},
+      {q:"米米CLUB「浪漫飛行」が再ヒットするきっかけとなったCMの分野は？", a:"航空", w:["自動車","飲料","家電"], e:"沖縄キャンペーンのCMで人気が再燃した。"},
+      {q:"Mr.Children「innocent world」が受賞したのは？", a:"日本レコード大賞", w:["直木賞","本屋大賞","菊池寛賞"], e:"1994年・第36回日本レコード大賞。"},
+      {q:"「贈る言葉」を歌った海援隊には、俳優としても活躍する武田鉄矢が在籍している。", ox:true, e:"武田鉄矢は「金八先生」で教師役も演じた。"},
+      {q:"DREAMS COME TRUE「LOVE LOVE LOVE」の主題歌ドラマは？", a:"愛していると言ってくれ", w:["東京ラブストーリー","あすなろ白書","ロングバケーション"], e:"1995年。常盤貴子・豊川悦司主演。"},
+      {q:"尾崎紀世彦「また逢う日まで」が受賞したのは？", a:"日本レコード大賞", w:["アカデミー賞","グラミー賞","ノーベル賞"], e:"1971年・第13回。"},
+      {q:"井上陽水「少年時代」は、テレビアニメの主題歌として作られた曲である。", ox:false, e:"同名の実写映画（1990年公開）の主題歌。"},
+      {q:"昭和の歌のヒットを支えた、TBSの人気音楽番組は？", a:"ザ・ベストテン", w:["紅白歌合戦","Mステ","カウントダウンTV"], e:"ランキング形式で多くの名曲を世に送り出した。"},
+      {q:"八代亜紀「雨の慕情」が受賞したのは？", a:"日本レコード大賞", w:["本屋大賞","日本アカデミー賞","芥川賞"], e:"1980年・第22回。"},
+      {q:"藤井フミヤ「TRUE LOVE」は1980年代のドラマ主題歌として大ヒットした。", ox:false, e:"1993年「あすなろ白書」主題歌。1990年代のヒット。"},
+      {q:"毎年大晦日に放送され、その年のヒット曲が披露される国民的番組は？", a:"NHK紅白歌合戦", w:["ザ・ベストテン","夜のヒットスタジオ","レコード大賞のみ"], e:"多くの歌手にとって出場が大きな目標とされた。"},
+    ]
+  },
 };
-let currentGenre=null,questions=[],qIndex=0,score=0,correctCount=0,wrongCount=0;
-let timeLeft=120,timer=null,answered=false,wrongAnswers=[],playerName='';
-let currentRankingGenre=null;
-let curChoices=[],curCorrectIdx=-1;
-function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);}
-function showToast(msg,d=2500){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),d);}
+
+const ORDER = ['folk','kayo','eighties','heisei','artist','tieup'];
+
+/* ---------- 状態 ---------- */
+let curGenre=null, pendingGenre=null;
+let questions=[], idx=0, score=0, correctCount=0, wrongList=[], timeLeft=START_TIME;
+let timerId=null, typingTimeout=null, fullQText='', answered=false, isOX=false;
+let lastResult=null, reviewIdx=0;
+
+/* ---------- ジャンルカード ---------- */
 function buildGenreCards(){
-  const grid=document.getElementById('genres-grid');
-  grid.innerHTML=GENRES.map(g=>`<div class="genre-card" onclick="selectGenre('${g.id}')"><div class="genre-accent" style="background:${g.color};"></div><span class="genre-icon">${g.icon}</span><div class="genre-name">${g.name}</div><div class="genre-desc">${g.desc}</div><div class="genre-count">全${DB[g.id].length}問収録 ／ 10問ランダム出題</div><span class="genre-start">▶ START</span></div>`).join('');
+  const grid=document.getElementById('genreGrid');
+  grid.innerHTML='';
+  ORDER.forEach(key=>{
+    const g=QUIZ[key];
+    const card=document.createElement('div');
+    card.className='gcard';
+    card.onclick=()=>openModal(key);
+    card.innerHTML=`<div class="ji">${g.ji}</div><div class="nm">${g.name}</div><div class="ct">全${g.pool.length}問から出題</div>`;
+    grid.appendChild(card);
+  });
 }
-function selectGenre(id){
-  currentGenre=GENRES.find(g=>g.id===id);
-  document.getElementById('intro-icon').textContent=currentGenre.icon;
-  document.getElementById('intro-name').textContent=currentGenre.name;
-  document.getElementById('intro-desc').textContent=currentGenre.desc;
-  if(window.TomyStamp){const saved=TomyStamp.getPlayer();const inp=document.getElementById('name-input');if(saved&&!inp.value)inp.value=saved;}
-  showScreen('screen-intro');
+
+/* ---------- 確認モーダル（最後の確認） ---------- */
+function openModal(key){
+  pendingGenre=key;
+  const g=QUIZ[key];
+  document.getElementById('modalJi').textContent=g.ji;
+  document.getElementById('modalName').textContent=g.name;
+  document.getElementById('modalDesc').textContent=g.desc;
+  document.getElementById('modalBg').classList.add('show');
 }
-function startGame(){
-  playerName=document.getElementById('name-input').value.trim()||'ゲスト';
-  if(window.TomyStamp&&playerName!=='ゲスト')TomyStamp.setPlayer(playerName);
-  questions=shuffle(DB[currentGenre.id]).slice(0,10);
-  qIndex=0;score=0;correctCount=0;wrongCount=0;wrongAnswers=[];
-  showScreen('screen-quiz');showQuestion();startTimer();
+function closeModal(){document.getElementById('modalBg').classList.remove('show');pendingGenre=null;}
+function confirmStart(){
+  const key=pendingGenre;
+  document.getElementById('modalBg').classList.remove('show');
+  if(key) startGame(key);
 }
-function retryGame(){showScreen('screen-intro');}
-function startTimer(){clearInterval(timer);timeLeft=120;updateTimerDisplay();timer=setInterval(()=>{timeLeft--;updateTimerDisplay();if(timeLeft<=0){clearInterval(timer);endGame();}},1000);}
-function updateTimerDisplay(){const el=document.getElementById('quiz-timer');el.textContent=timeLeft;el.className='quiz-timer'+(timeLeft<=10?' danger':'');}
-function showQuestion(){
-  const q=questions[qIndex];answered=false;
-  document.getElementById('quiz-qnum').textContent=`Q${qIndex+1} / 10`;
-  document.getElementById('quiz-progress-fill').style.width=`${(qIndex/10)*100}%`;
-  document.getElementById('quiz-score').textContent=`${score} pt`;
-  document.getElementById('feedback-bar').className='feedback-bar';
-  document.getElementById('feedback-bar').innerHTML='';
-  document.getElementById('next-btn').className='next-btn';
-  if(q.type==='4'){
-    document.getElementById('quiz-type-badge').textContent='4択';
-    document.getElementById('quiz-type-badge').className='quiz-type-badge type-4';
-    document.getElementById('quiz-q').innerHTML=q.q;
-    // 選択肢をシャッフルして正解位置の偏りを防ぐ
-    const pairs=q.c.map((text,i)=>({text,correct:i===q.a}));
-    curChoices=shuffle(pairs);
-    curCorrectIdx=curChoices.findIndex(p=>p.correct);
-    const lb=['A','B','C','D'];
-    document.getElementById('quiz-choices').className='choices';
-    document.getElementById('quiz-choices').innerHTML=curChoices.map((p,i)=>`<button class="choice-btn" onclick="answer4(${i})"><span class="choice-label">${lb[i]}</span>${p.text}</button>`).join('');
+function randomGenre(){openModal(ORDER[Math.floor(Math.random()*ORDER.length)]);}
+
+/* ---------- ユーティリティ ---------- */
+function shuffle(arr){
+  const a=arr.slice();
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+/* ---------- ゲーム開始 ---------- */
+function startGame(key){
+  curGenre=key;
+  const pool=QUIZ[key].pool;
+  questions=shuffle(pool).slice(0,Math.min(TOTAL_Q,pool.length));
+  idx=0;score=0;correctCount=0;wrongList=[];timeLeft=START_TIME;
+  document.getElementById('hudScore').textContent='0';
+  showScreen('quiz');
+  startTimer();
+  renderQuestion();
+}
+
+/* ---------- タイマー ---------- */
+function startTimer(){
+  clearInterval(timerId);
+  updateTimeUI();
+  timerId=setInterval(()=>{
+    timeLeft--;
+    if(timeLeft<=0){timeLeft=0;updateTimeUI();endGame();return;}
+    updateTimeUI();
+  },1000);
+}
+function updateTimeUI(){
+  document.getElementById('hudTime').textContent=timeLeft;
+  const pct=Math.max(0,Math.min(100,(timeLeft/START_TIME)*100));
+  document.getElementById('timeFill').style.width=pct+'%';
+  const pill=document.getElementById('timePill');
+  if(timeLeft<=15)pill.classList.add('warn');else pill.classList.remove('warn');
+}
+
+/* ---------- 出題（タイプライター＋早押し） ---------- */
+function renderQuestion(){
+  answered=false;
+  const q=questions[idx];
+  isOX=(typeof q.ox==='boolean');
+  document.getElementById('qTag').textContent=QUIZ[curGenre].name;
+  document.getElementById('qType').textContent=isOX?'○×問題':'4択問題';
+  document.getElementById('progress').textContent=`第 ${idx+1} 問 / ${questions.length}`;
+
+  // 選択肢を隠し、回答ボタンを表示
+  const box=document.getElementById('choices');
+  box.classList.remove('show');box.className='choices';box.innerHTML='';
+  document.getElementById('buzzWrap').style.display='block';
+
+  // タイプライター開始
+  typeQuestion(q.q);
+}
+function typeQuestion(text){
+  clearTimeout(typingTimeout);
+  fullQText=text;
+  const el=document.getElementById('qText');
+  el.classList.remove('fade-out','done');
+  el.textContent='';
+  let i=0;
+  (function step(){
+    el.textContent=text.slice(0,i);
+    if(i<text.length){i++;typingTimeout=setTimeout(step,TYPING_SPEED);}
+    else{el.classList.add('done');}
+  })();
+}
+
+/* 「回答する！」→ タイプ停止 → 問題文フェードアウト → 選択肢表示 */
+function buzz(){
+  if(answered)return;
+  clearTimeout(typingTimeout);
+  const el=document.getElementById('qText');
+  el.classList.add('fade-out');
+  document.getElementById('buzzWrap').style.display='none';
+
+  buildChoices(questions[idx]);
+  setTimeout(()=>{
+    const box=document.getElementById('choices');
+    box.style.display='grid';
+    void box.offsetWidth;
+    box.classList.add('show');
+  },280);
+}
+function buildChoices(q){
+  const box=document.getElementById('choices');
+  box.innerHTML='';box.className='choices';
+  if(isOX){
+    box.classList.add('ox');
+    // ◯ → ✕ の並びを固定（偏り防止はプール側で均等化）
+    [['◯',true],['✕',false]].forEach(([mark,val])=>{
+      const b=document.createElement('button');
+      b.className='choice ox-mark';b.textContent=mark;
+      b.onclick=()=>pick(b,val===q.ox,q);
+      box.appendChild(b);
+    });
   }else{
-    document.getElementById('quiz-type-badge').textContent='○×';
-    document.getElementById('quiz-type-badge').className='quiz-type-badge type-ox';
-    document.getElementById('quiz-q').innerHTML=q.q;
-    document.getElementById('quiz-choices').className='';
-    document.getElementById('quiz-choices').innerHTML=`<div class="ox-choices"><button class="ox-btn" onclick="answerOX(true)">⭕<span>正しい</span></button><button class="ox-btn" onclick="answerOX(false)">❌<span>誤り</span></button></div>`;
+    // {text,correct} を作りシャッフル（正解位置の偏り防止）
+    let opts=[{text:q.a,correct:true}].concat(q.w.map(w=>({text:w,correct:false})));
+    opts=shuffle(opts);
+    opts.forEach(o=>{
+      const b=document.createElement('button');
+      b.className='choice';b.textContent=o.text;
+      b.onclick=()=>pick(b,o.correct,q);
+      box.appendChild(b);
+    });
   }
 }
-function answer4(idx){if(answered)return;answered=true;const q=questions[qIndex];const btns=document.querySelectorAll('.choice-btn');btns.forEach(b=>b.disabled=true);btns[curCorrectIdx].classList.add('correct');if(idx!==curCorrectIdx)btns[idx].classList.add('wrong');processAnswer(idx===curCorrectIdx,curChoices[curCorrectIdx].text,q.q,q.m);}
-function answerOX(val){if(answered)return;answered=true;const q=questions[qIndex];const btns=document.querySelectorAll('.ox-btn');btns.forEach(b=>b.disabled=true);btns[q.a?0:1].classList.add('correct');if(val!==q.a)btns[val?0:1].classList.add('wrong');processAnswer(val===q.a,q.a?'○（正しい）':'×（誤り）',q.q,q.m);}
-function processAnswer(isCorrect,correctAns,qText,mean){
-  const fb=document.getElementById('feedback-bar');
-  const meanHtml=mean?`<span class="feedback-mean">💡 ${mean}</span>`:'';
-  if(isCorrect){score+=10;correctCount++;timeLeft=Math.min(timeLeft+5,999);fb.innerHTML='✅ 正解！ ＋5秒'+meanHtml;fb.className='feedback-bar ok show';}
-  else{wrongCount++;timeLeft=Math.max(timeLeft-5,0);fb.innerHTML=`❌ 正解は「${correctAns}」（−5秒）`+meanHtml;fb.className='feedback-bar ng show';wrongAnswers.push({q:qText,a:correctAns,m:mean||''});}
-  updateTimerDisplay();document.getElementById('next-btn').className='next-btn show';
+
+/* ---------- 解答処理 ---------- */
+function pick(btn,isCorrect,q){
+  if(answered)return;
+  answered=true;
+  clearInterval(timerId); // オーバーレイ閲覧中はタイマー停止
+
+  const buttons=document.querySelectorAll('#choices .choice');
+  buttons.forEach(b=>b.disabled=true);
+  if(btn&&btn.blur)btn.blur();
+  const correctText=isOX?(q.ox?'◯（正しい）':'✕（誤り）'):q.a;
+
+  if(isCorrect){
+    score+=10;correctCount++;
+    timeLeft=Math.min(MAX_TIME,timeLeft+5);
+    btn.classList.add('correct');
+    document.getElementById('hudScore').textContent=score;
+    updateTimeUI();
+    showToast(true,'✅ 正解！','+10点　時間 +5秒　⏱');
+  }else{
+    timeLeft=Math.max(0,timeLeft-5);
+    btn.classList.add('wrong');
+    buttons.forEach(b=>{
+      if(isOX){ if((b.textContent==='◯')===q.ox)b.classList.add('correct'); }
+      else{ if(b.textContent===q.a)b.classList.add('correct'); }
+    });
+    updateTimeUI();
+    showToast(false,'❌ 不正解',`正解は「${isOX?(q.ox?'◯':'✕'):q.a}」（時間 −5秒）`);
+    wrongList.push({
+      q:q.q,
+      yours: isOX?(q.ox?'✕':'◯'):btn.textContent,
+      correct: correctText,
+      e:q.e||''
+    });
+  }
+
+  // 問題文を全文でフェードイン再表示
+  const el=document.getElementById('qText');
+  el.classList.remove('fade-out');
+  el.classList.add('done');
+  el.textContent=fullQText;
+
+  // 0.6秒後に正誤オーバーレイ
+  setTimeout(()=>showResultOverlay(isCorrect,q,correctText),600);
 }
-function nextQuestion(){qIndex++;if(qIndex>=10){clearInterval(timer);endGame();}else{showQuestion();}}
+
+/* ---------- 正誤オーバーレイ ---------- */
+function showResultOverlay(isCorrect,q,correctText){
+  const ov=document.getElementById('resultOverlay');
+  const card=document.getElementById('roCard');
+  card.className='ro-card '+(isCorrect?'ok':'ng');
+  document.getElementById('roMark').textContent=isCorrect?'◯':'✕';
+  document.getElementById('roHead').textContent=isCorrect?'正解！':'残念…';
+  document.getElementById('roAns').innerHTML=`正解<b>${escapeHtml(correctText)}</b>`;
+  const ex=document.getElementById('roExplain');
+  if(q.e){ex.style.display='block';ex.innerHTML='💡 '+escapeHtml(q.e);}
+  else{ex.style.display='none';}
+  ov.classList.add('show');
+}
+
+/* 「次の問題へ」→ 押した瞬間にトーストを消す */
+function nextQuestion(){
+  hideToast();
+  document.getElementById('resultOverlay').classList.remove('show');
+  idx++;
+  if(idx>=questions.length || timeLeft<=0){
+    endGame();
+  }else{
+    startTimer();      // 停止していたタイマーを再開
+    renderQuestion();
+  }
+}
+
+/* ---------- トースト ---------- */
+function showToast(ok,big,small){
+  const t=document.getElementById('toast');
+  t.className='toast '+(ok?'ok':'ng');
+  document.getElementById('toastBig').textContent=big;
+  document.getElementById('toastSmall').textContent=small;
+  void t.offsetWidth;
+  t.classList.add('show');
+}
+function hideToast(){document.getElementById('toast').classList.remove('show');}
+
+/* ---------- 終了・結果 ---------- */
 function endGame(){
-  clearInterval(timer);
-  const bonus=Math.max(timeLeft,0),total=score+bonus;
-  const medal=correctCount>=9?'🥇':correctCount>=7?'🥈':correctCount>=5?'🥉':'😅';
-  document.getElementById('result-genre').textContent=currentGenre.icon+' '+currentGenre.name;
-  document.getElementById('result-score').textContent=total;
-  document.getElementById('result-medal').textContent=medal;
-  document.getElementById('result-correct').textContent=correctCount;
-  document.getElementById('result-wrong').textContent=wrongCount;
-  document.getElementById('result-bonus').textContent='+'+bonus;
-  const ws=document.getElementById('wrong-section');
-  if(wrongAnswers.length>0){ws.innerHTML=`<div class="wrong-label">// ❌ 間違えた問題（${wrongAnswers.length}問）</div>`+wrongAnswers.map((w,i)=>`<div class="wrong-item"><div class="wrong-item-num">問${i+1}</div><div class="wrong-item-q">${w.q}</div><div class="wrong-item-ans"><span class="wrong-item-ans-label">正解</span><span class="wrong-item-ans-text">${w.a}</span></div>${w.m?`<div class="wrong-item-mean">💡 ${w.m}</div>`:''}</div>`).join('');}
-  else{ws.innerHTML='<div style="text-align:center;padding:20px;font-family:\'Share Tech Mono\',monospace;font-size:12px;color:var(--gold3);">🎉 全問正解！おみごと！</div>';}
-  saveRanking(currentGenre.id,playerName,total,correctCount);
-  if(window.TomyStamp&&playerName!=='ゲスト'){TomyStamp.send('meikyoku-quiz',currentGenre.name,correctCount).then(r=>{if(r&&r.ok)showToast('⭐ スタンプ獲得！ランキングに反映されます');});}
-  showScreen('screen-result');
+  clearInterval(timerId);
+  clearTimeout(typingTimeout);
+  hideToast();
+  document.getElementById('resultOverlay').classList.remove('show');
+
+  const base=correctCount*10;
+  const bonus=timeLeft;
+  const total=base+bonus;
+  lastResult={genre:curGenre,total,base,bonus,correct:correctCount,saved:false,hanamaru:false,stamped:false};
+
+  document.getElementById('resGenre').textContent='【'+QUIZ[curGenre].name+'】';
+  document.getElementById('resTotal').textContent=total;
+  document.getElementById('resCorrect').textContent=correctCount;
+  document.getElementById('resBase').textContent=base;
+  document.getElementById('resBonus').textContent=bonus;
+
+  const badge=document.getElementById('resBadge');
+  let label,bg,col;
+  if(correctCount>=10){label='🏆 名曲マスター！全問正解';bg='linear-gradient(135deg,#ffd166,#e0a91f)';col='#2a1f04';}
+  else if(correctCount>=8){label='🎤 筋金入りの音楽通';bg='linear-gradient(135deg,#ff4d8d,#c92f6b)';col='#fff';}
+  else if(correctCount>=6){label='🎶 なかなかの耳自慢';bg='rgba(255,77,141,.2)';col='#ff95ba';}
+  else if(correctCount>=4){label='🌱 これから聴き込もう';bg='rgba(255,255,255,.1)';col='#ece6e9';}
+  else{label='🔰 まずは口ずさみから！';bg='rgba(255,255,255,.06)';col='#b7add0';}
+  badge.textContent=label;badge.style.background=bg;badge.style.color=col;
+
+  document.getElementById('reviewBtn').style.display=wrongList.length?'block':'none';
+  document.getElementById('saveBtn').disabled=false;
+  document.getElementById('saveBtn').textContent='📥 ランキングに登録';
+
+  // 花丸スタンプ（正解率90%以上＝10問中9問以上）
+  const hm=document.getElementById('hanamaru');
+  if(correctCount>=9){
+    if(hm)hm.style.display='block';
+    lastResult.hanamaru=true;
+    // ポータル登録名が既にあれば終了時に自動送信（重複防止）
+    if(window.TomyStamp && TomyStamp.getPlayer() && !lastResult.stamped){
+      lastResult.stamped=true;
+      try{TomyStamp.send(STAMP_GAME_ID,QUIZ[curGenre].name,correctCount);}catch(e){}
+    }
+  }else{
+    if(hm)hm.style.display='none';
+  }
+  // 登録名欄に既存のポータル名を自動入力
+  try{
+    const pn=document.getElementById('playerName');
+    if(window.TomyStamp && pn && !pn.value){const sv=TomyStamp.getPlayer();if(sv)pn.value=sv;}
+  }catch(e){}
+
+  showScreen('result');
 }
-const LS_KEY='meikyoku_quiz_ranking';
-function saveRanking(gId,name,sc,correct){const data=JSON.parse(localStorage.getItem(LS_KEY)||'{}');if(!data[gId])data[gId]=[];data[gId].push({name,score:sc,correct,date:new Date().toLocaleDateString('ja-JP')});data[gId].sort((a,b)=>b.score-a.score);data[gId]=data[gId].slice(0,20);localStorage.setItem(LS_KEY,JSON.stringify(data));}
-function showRanking(){const tabs=document.getElementById('ranking-tabs');tabs.innerHTML=GENRES.map(g=>`<button class="ranking-tab" onclick="switchRankingTab('${g.id}',this)">${g.icon} ${g.name}</button>`).join('');showScreen('screen-ranking');switchRankingTab(GENRES[0].id,tabs.querySelector('.ranking-tab'));}
-function switchRankingTab(id,btn){document.querySelectorAll('.ranking-tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');currentRankingGenre=id;renderRanking(id);}
-function renderRanking(id){const data=JSON.parse(localStorage.getItem(LS_KEY)||'{}');const rows=data[id]||[];const list=document.getElementById('ranking-list');if(!rows.length){list.innerHTML='<div class="ranking-empty">// まだ記録がありません</div>';return;}list.innerHTML=rows.map((r,i)=>{const pos=i+1,pc=pos===1?'gold':pos===2?'silver':pos===3?'bronze':'';const rc=pos===1?'top1':pos===2?'top2':pos===3?'top3':'';return `<div class="ranking-row ${rc}"><span class="ranking-pos ${pc}">${pos}</span><span class="ranking-name">${r.name}</span><span style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text3);">${r.correct}/10</span><span class="ranking-score">${r.score}</span><span class="ranking-date">${r.date}</span></div>`;}).join('');}
-function deleteRanking(){if(!currentRankingGenre)return;if(!confirm(`「${GENRES.find(g=>g.id===currentRankingGenre)?.name}」の記録を削除しますか？`))return;const data=JSON.parse(localStorage.getItem(LS_KEY)||'{}');delete data[currentRankingGenre];localStorage.setItem(LS_KEY,JSON.stringify(data));renderRanking(currentRankingGenre);}
+
+/* ---------- スコア保存（ローカル） ---------- */
+function loadRanking(){
+  try{return JSON.parse(localStorage.getItem(STORAGE_KEY))||{};}
+  catch(e){return {};}
+}
+function saveScore(){
+  if(!lastResult||lastResult.saved)return;
+  let name=document.getElementById('playerName').value.trim();
+  if(!name)name='名無しの音楽好き';
+  const data=loadRanking();
+  if(!data[lastResult.genre])data[lastResult.genre]=[];
+  const d=new Date();
+  const dateStr=`${d.getMonth()+1}/${d.getDate()}`;
+  data[lastResult.genre].push({name,score:lastResult.total,correct:lastResult.correct,date:dateStr});
+  data[lastResult.genre].sort((a,b)=>b.score-a.score);
+  data[lastResult.genre]=data[lastResult.genre].slice(0,50);
+  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(data));}catch(e){}
+  // ポータル花丸ランキングへ反映（正解率90%以上のとき）
+  try{
+    if(window.TomyStamp){
+      TomyStamp.setPlayer(name);
+      if(lastResult.hanamaru && !lastResult.stamped){
+        lastResult.stamped=true;
+        TomyStamp.send(STAMP_GAME_ID,QUIZ[lastResult.genre].name,lastResult.correct);
+      }
+    }
+  }catch(e){}
+  lastResult.saved=true;
+  document.getElementById('saveBtn').textContent='✅ 登録しました';
+  document.getElementById('saveBtn').disabled=true;
+  setTimeout(()=>showRanking(lastResult.genre),500);
+}
+
+/* ---------- 復習 ---------- */
+function showReview(){reviewIdx=0;renderReview();showScreen('review');}
+function renderReview(){
+  const card=document.getElementById('reviewCard');
+  if(wrongList.length===0){
+    card.innerHTML=`<div class="perfect-msg">🎉<br>間違いはありませんでした！<br>お見事、名曲マスター！</div>`;
+    return;
+  }
+  const w=wrongList[reviewIdx];
+  card.innerHTML=`
+    <div class="review-head">
+      <span class="ttl">📖 間違えた問題</span>
+      <span class="count">${reviewIdx+1} / ${wrongList.length}</span>
+    </div>
+    <div class="review-q">${escapeHtml(w.q)}</div>
+    <div class="ans-block">
+      <div class="ans-line yours"><span class="lab">あなたの解答</span><span class="val">${escapeHtml(w.yours)}</span></div>
+      <div class="ans-line right"><span class="lab">正解</span><span class="val">${escapeHtml(w.correct)}</span></div>
+    </div>
+    ${w.e?`<div class="explain">💡 ${escapeHtml(w.e)}</div>`:''}
+    <div class="review-nav">
+      <button class="btn btn-ghost" onclick="prevReview()" ${reviewIdx===0?'disabled style=opacity:.4':''}>‹ 前へ</button>
+      <button class="btn btn-ghost" onclick="nextReview()" ${reviewIdx===wrongList.length-1?'disabled style=opacity:.4':''}>次へ ›</button>
+    </div>`;
+}
+function prevReview(){if(reviewIdx>0){reviewIdx--;renderReview();}}
+function nextReview(){if(reviewIdx<wrongList.length-1){reviewIdx++;renderReview();}}
+function backToResult(){showScreen('result');}
+
+/* ---------- ランキング画面 ---------- */
+let curRankTab=null;
+function showRanking(focusGenre){
+  buildRankTabs();
+  curRankTab=focusGenre||ORDER[0];
+  renderRankList();
+  showScreen('ranking');
+}
+function buildRankTabs(){
+  const tabs=document.getElementById('rankTabs');
+  tabs.innerHTML='';
+  ORDER.forEach(key=>{
+    const b=document.createElement('button');
+    b.className='tab';b.textContent=QUIZ[key].name;
+    b.dataset.key=key;
+    b.onclick=()=>{curRankTab=key;renderRankList();};
+    tabs.appendChild(b);
+  });
+}
+function renderRankList(){
+  document.querySelectorAll('#rankTabs .tab').forEach(t=>{
+    t.classList.toggle('active',t.dataset.key===curRankTab);
+  });
+  const data=loadRanking();
+  const list=document.getElementById('rankList');
+  const arr=(data[curRankTab]||[]).slice(0,10);
+  if(arr.length===0){
+    list.innerHTML=`<div class="rank-empty">まだ記録がありません。<br>「${QUIZ[curRankTab].name}」に挑戦してみましょう！</div>`;
+    return;
+  }
+  list.innerHTML='';
+  arr.forEach((r,i)=>{
+    const li=document.createElement('li');
+    if(i<3)li.classList.add('top'+(i+1));
+    const medal=['🥇','🥈','🥉'][i]||(i+1);
+    li.innerHTML=`<span class="pos">${medal}</span>
+      <span class="nm">${escapeHtml(r.name)}</span>
+      <span class="dt">${r.date||''}</span>
+      <span class="sc">${r.score}点</span>`;
+    list.appendChild(li);
+  });
+}
+function clearRanking(){
+  if(confirm('この端末に保存されたランキングをすべて消去します。よろしいですか？')){
+    try{localStorage.removeItem(STORAGE_KEY);}catch(e){}
+    renderRankList();
+  }
+}
+
+/* ---------- 画面遷移 ---------- */
+function showScreen(name){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+name).classList.add('active');
+  window.scrollTo(0,0);
+}
+function goTitle(){clearInterval(timerId);clearTimeout(typingTimeout);hideToast();document.getElementById('resultOverlay').classList.remove('show');showScreen('title');}
+function retrySame(){if(curGenre)startGame(curGenre);}
+function quitGame(){
+  if(confirm('クイズをやめてトップに戻りますか？（このプレイのスコアは記録されません）')){
+    clearInterval(timerId);clearTimeout(typingTimeout);hideToast();
+    document.getElementById('resultOverlay').classList.remove('show');
+    showScreen('title');
+  }
+}
+
+/* ---------- canvas 背景（動的リサイズ） ---------- */
+const canvas=document.getElementById('bgCanvas');
+const ctx=canvas.getContext('2d');
+const GLYPHS=['🎵','🎶','🎤','🎸','🎹','💿','📻','🎧','♪','♫','★','✨','📺','🎺','🌃'];
+const NEON=['255,0,51','255,206,58','255,107,134'];
+let drops=[],dpr=1;
+function resizeCanvas(){
+  dpr=window.devicePixelRatio||1;
+  canvas.width=Math.floor(window.innerWidth*dpr);
+  canvas.height=Math.floor(window.innerHeight*dpr);
+  canvas.style.width=window.innerWidth+'px';
+  canvas.style.height=window.innerHeight+'px';
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  const count=Math.max(12,Math.floor(window.innerWidth/40));
+  drops=[];
+  for(let i=0;i<count;i++){
+    drops.push({
+      x:Math.random()*window.innerWidth,
+      y:Math.random()*window.innerHeight,
+      size:14+Math.random()*22,
+      spd:.15+Math.random()*.5,
+      ch:GLYPHS[Math.floor(Math.random()*GLYPHS.length)],
+      col:NEON[Math.floor(Math.random()*NEON.length)],
+      a:.05+Math.random()*.12
+    });
+  }
+}
+function drawBg(){
+  ctx.clearRect(0,0,window.innerWidth,window.innerHeight);
+  drops.forEach(d=>{
+    ctx.font=`${d.size}px 'Noto Sans JP', sans-serif`;
+    ctx.fillStyle=`rgba(${d.col},${d.a})`;
+    ctx.shadowColor=`rgba(${d.col},${d.a*2})`;
+    ctx.shadowBlur=10;
+    ctx.fillText(d.ch,d.x,d.y);
+    ctx.shadowBlur=0;
+    d.y+=d.spd;
+    if(d.y>window.innerHeight+d.size){
+      d.y=-d.size;d.x=Math.random()*window.innerWidth;
+      d.ch=GLYPHS[Math.floor(Math.random()*GLYPHS.length)];
+      d.col=NEON[Math.floor(Math.random()*NEON.length)];
+    }
+  });
+  requestAnimationFrame(drawBg);
+}
+let resizeTO;
+window.addEventListener('resize',()=>{clearTimeout(resizeTO);resizeTO=setTimeout(resizeCanvas,120);});
+window.addEventListener('orientationchange',()=>setTimeout(resizeCanvas,200));
+
+/* ---------- 起動 ---------- */
 buildGenreCards();
+resizeCanvas();
+drawBg();
+document.getElementById('modalBg').addEventListener('click',e=>{if(e.target.id==='modalBg')closeModal();});
 </script>
 </body>
 </html>
