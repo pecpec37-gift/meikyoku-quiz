@@ -318,6 +318,18 @@
   @media(max-width:360px){
     .hud .pill{padding:7px 11px;}
   }
+
+  /* ===== 学習メニュー ===== */
+  .lcard::after{content:"クリックで学習 →";}
+  .study-intro{background:linear-gradient(135deg,rgba(255,0,51,.10),rgba(255,206,58,.06));border:1px solid rgba(255,0,51,.30);border-radius:14px;padding:16px 18px;margin:0 0 16px;font-size:14px;line-height:1.85;color:#ece6e9;box-shadow:0 6px 22px var(--shadow);}
+  .study-genre-head{display:flex;align-items:center;gap:12px;justify-content:center;margin:8px 0 16px;text-align:center;}
+  .study-genre-head .ji{font-size:clamp(30px,8vw,44px);line-height:1;filter:drop-shadow(0 2px 10px rgba(255,0,51,.35));}
+  .study-genre-head .nm{font-weight:900;font-size:clamp(18px,5vw,24px);color:var(--white);}
+  .lpoint{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.10);border-left:4px solid var(--red);border-radius:14px;padding:14px 16px;margin-bottom:12px;box-shadow:0 4px 16px var(--shadow);}
+  .lpoint .lh{display:flex;align-items:flex-start;gap:9px;font-weight:900;font-size:15px;color:var(--gold-soft);line-height:1.5;}
+  .lpoint .lh .no{flex:none;min-width:25px;height:25px;border-radius:50%;background:linear-gradient(135deg,var(--red),var(--red-deep));color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;font-weight:900;}
+  .lpoint .lb{margin-top:8px;font-size:14px;line-height:1.9;color:#ece6e9;}
+  .study-actions{margin-top:18px;display:flex;flex-direction:column;gap:10px;}
 </style>
 </head>
 <body>
@@ -352,6 +364,8 @@
       </ul>
       <div class="tap-hint"><span>▶ ジャンルをクリックで即スタート！</span></div>
     </div>
+
+    <div style="text-align:center;margin:0 0 6px;"><button class="btn btn-crimson" style="width:100%;max-width:520px;" onclick="openStudy()">📖 学習メニュー（概要と解説を読む）</button></div>
 
     <div class="section-label">ジャンルを選ぶ</div>
     <div class="genres" id="genreGrid"></div>
@@ -441,6 +455,31 @@
     <div class="footer-row" style="gap:10px;flex-wrap:wrap;">
       <button class="btn btn-ghost" onclick="goTitle()">🏠 トップへ戻る</button>
       <button class="btn btn-ghost" onclick="clearRanking()">🗑 この記録を消去</button>
+    </div>
+  </section>
+
+  <!-- ============ STUDY (list) ============ -->
+  <section id="screen-study" class="screen">
+    <div class="crest" style="margin-top:36px;">
+      <div class="seal">学習メニュー</div>
+      <h1 style="font-size:clamp(26px,7vw,40px);">📖 <span class="yt">名曲</span>を<span class="dojo">学ぶ</span></h1>
+      <div class="subtitle">読んで学べる 概要と解説。<br>ジャンルを選んで知識を深めよう。</div>
+    </div>
+    <div class="section-label">ジャンルを選ぶ</div>
+    <div class="genres" id="studyGrid"></div>
+    <div class="top-actions" style="grid-template-columns:1fr;margin-top:16px;">
+      <button class="btn btn-ghost" onclick="goTitle()">🏠 トップへ戻る</button>
+    </div>
+  </section>
+
+  <!-- ============ STUDY (detail) ============ -->
+  <section id="screen-studyDetail" class="screen">
+    <div class="study-genre-head"><span class="ji" id="studyJi">🎵</span><span class="nm" id="studyName">ジャンル</span></div>
+    <div id="studyBody"></div>
+    <div class="study-actions">
+      <button class="btn btn-gold" id="studyQuizBtn">🎯 このジャンルのクイズに挑戦</button>
+      <button class="btn btn-ghost" onclick="openStudy()">‹ 学習メニューへ戻る</button>
+      <button class="btn btn-ghost" onclick="goTitle()">🏠 トップへ戻る</button>
     </div>
   </section>
 
@@ -1099,6 +1138,7 @@ function showScreen(name){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById('screen-'+name).classList.add('active');
   window.scrollTo(0,0);
+  if(typeof resizeCanvas==='function') requestAnimationFrame(resizeCanvas);
 }
 function goTitle(){clearInterval(timerId);clearTimeout(typingTimeout);hideToast();document.getElementById('resultOverlay').classList.remove('show');showScreen('title');}
 function retrySame(){if(curGenre)startGame(curGenre);}
@@ -1160,7 +1200,38 @@ window.addEventListener('resize',()=>{clearTimeout(resizeTO);resizeTO=setTimeout
 window.addEventListener('orientationchange',()=>setTimeout(resizeCanvas,200));
 
 /* ---------- 起動 ---------- */
+/* ---------- 学習メニュー ---------- */
+const STUDY = {"folk": {"intro": "1970年代を中心に広がった、フォークとニューミュージック。弾き語りや詩的な歌詞で若者の心をつかんだ、名曲・名アーティストを押さえましょう。", "points": [{"h": "「なごり雪」", "b": "原曲はかぐや姫（1974年）で、伊勢正三が作詞・作曲。イルカのカバー（1975年）が大ヒットしました。春の別れを描いた、フォークの定番曲です。"}, {"h": "かぐや姫と南こうせつ", "b": "「神田川」（1973年、作詞・喜多条忠、作曲・南こうせつ）で知られるフォークグループ。解散後、伊勢正三は大久保一久と「風」を結成し、「22才の別れ」を生みました。"}, {"h": "ユーミン（荒井由実）", "b": "「卒業写真」（1975年）を作詞・作曲・歌唱。バンバンに提供した「『いちご白書』をもう一度」もヒット。のちに松任谷由実として長く活躍します。"}, {"h": "井上陽水", "b": "「少年時代」（1990年、同名映画の主題歌）が代表曲。他の歌手への提供（中森明菜「飾りじゃないのよ涙は」など）でも、数々のヒットを生みました。"}, {"h": "男女デュオの活躍", "b": "チェリッシュ、トワ・エ・モワ、ヒデとロザンナなど、昭和を代表する男女ペアが活躍。さだまさしはデュオ「グレープ」（「精霊流し」）を経て、ソロで人気を得ました。"}, {"h": "ニューミュージックの担い手", "b": "「結婚しようよ」のよしだたくろう、「昴」の谷村新司（アリス）、北海道出身の松山千春、オフコースの小田和正など、多彩なシンガーが登場しました。"}, {"h": "ヒット曲いろいろ", "b": "「異邦人」（久保田早紀、1979年、家電CMで話題）、「学生街の喫茶店」（ガロ）、「青春時代」（森田公一とトップギャラン）、「岬めぐり」（山本コータローとウィークエンド）など。"}]}, "kayo": {"intro": "テレビの歌番組とともに広まった昭和歌謡と、アイドル黄金期。作詞家・作曲家の名コンビや、日本レコード大賞に輝いた名曲を押さえましょう。", "points": [{"h": "職業作家の名コンビ", "b": "作詞・松本隆×作曲・筒美京平の「木綿のハンカチーフ」（太田裕美、1975年）など、職業作家が数々のヒットを生みました。松本隆は「赤いスイートピー」「ルビーの指環」も手がけています。"}, {"h": "日本レコード大賞の名曲", "b": "「また逢う日まで」（尾崎紀世彦、1971年）、「勝手にしやがれ」（沢田研二、1977年）、「UFO」（ピンク・レディー、1978年）、「雨の慕情」（八代亜紀、1980年）、「ルビーの指環」（寺尾聰、1981年）など。"}, {"h": "アイドルグループとトリオ", "b": "「春一番」などのキャンディーズ、森昌子・桜田淳子・山口百恵の「花の中三トリオ」、郷ひろみ・西城秀樹・野口五郎の「新御三家」が人気を集めました。"}, {"h": "80年代アイドル", "b": "「スローモーション」「セカンド・ラブ」の中森明菜、「夏の扉」の松田聖子など。中森明菜「飾りじゃないのよ涙は」は、井上陽水の提供曲です。"}, {"h": "演歌の世界", "b": "「津軽海峡冬景色」（石川さゆり、作詞・阿久悠、作曲・三木たかし）、「喝采」（ちあきなおみ）、「与作」の北島三郎など、演歌も歌謡界を支えました。"}, {"h": "美空ひばり", "b": "昭和を代表する大歌手。最後のシングル「川の流れのように」（1989年、作詞・秋元康）は、不朽の名曲として親しまれています。"}, {"h": "ヒットの普及経路", "b": "「およげ！たいやきくん」（子門真人、1975〜76年）が社会現象になるなど、「ザ・ベストテン」等のテレビ歌番組がヒットを生み出す時代でした。"}]}, "eighties": {"intro": "バンドブームとシティポップ、ドラマ・CMタイアップが花開いた1980年代。きらびやかなポップスと、個性的なバンドを押さえましょう。", "points": [{"h": "バンドブーム", "b": "NOKKOがボーカルの「フレンズ」（レベッカ）、「Romanticが止まらない」（C-C-B）、「Diamonds」「M」の奥居香（岸谷香）率いるプリンセス プリンセスなど、女性ボーカル・混成バンドが活躍しました。"}, {"h": "ドラマ・CMタイアップ", "b": "「恋におちて -Fall in love-」（小林明子、1985年、ドラマ「金曜日の妻たちへIII」主題歌）など、映像作品と結びついたヒットが増えました。"}, {"h": "シティポップ", "b": "杉山清貴&オメガトライブ「サマー・サスピション」、1986オメガトライブ「君は1000%」など、リゾート感のあるサウンドが人気。山下達郎らも第一人者です。"}, {"h": "安全地帯と玉置浩二", "b": "ボーカル玉置浩二の「ワインレッドの心」（1983年、作詞・井上陽水）などで人気を集め、バンドとソロの両方で活躍しました。"}, {"h": "小室哲哉の出発点", "b": "渡辺美里「My Revolution」（1986年、作曲・小室哲哉）、アニメ「シティーハンター」EDの「Get Wild」（TM NETWORK、1987年）など、後の一時代につながります。"}, {"h": "若者を歌った尾崎豊", "b": "「15の夜」「卒業」など、10代の葛藤を描いた楽曲で、熱狂的な支持を得ました。"}, {"h": "アイドルとバンド", "b": "たのきんトリオの近藤真彦（「ギンギラギンにさりげなく」）、チェッカーズ（「ギザギザハートの子守唄」、後に藤井フミヤがソロ「TRUE LOVE」）、あみん（「待つわ」）など。"}]}, "heisei": {"intro": "CDが飛ぶように売れた、平成のJ-POP黄金期。ミリオンヒットやドラマ主題歌、名プロデューサーが生んだ名曲を押さえましょう。", "points": [{"h": "国民的メガヒット", "b": "スピッツ「ロビンソン」（1995年）、ZARD「負けないで」（1993年、ボーカル坂井泉水）、SMAP「世界に一つだけの花」（2003年、槇原敬之作）、サザン「TSUNAMI」（2000年、日本レコード大賞）など。"}, {"h": "ドラマ主題歌", "b": "CHAGE and ASKA「SAY YES」（「101回目のプロポーズ」）、藤井フミヤ「TRUE LOVE」（「あすなろ白書」）、久保田利伸「LA・LA・LA LOVE SONG」（「ロングバケーション」）など、月9などとの相乗効果でヒットしました。"}, {"h": "Mr.Children", "b": "ボーカルは桜井和寿。「innocent world」は1994年の日本レコード大賞を受賞。小林武史のプロデュースでも知られます。"}, {"h": "小室ファミリー", "b": "globe、TRF、安室奈美恵らを手がけた小室哲哉が90年代に旋風を起こしました。H Jungle with t「WOW WAR TONIGHT」（1995年、浜田雅功が歌唱）も話題に。"}, {"h": "バラードの名曲", "b": "DREAMS COME TRUE「未来予想図II」（ボーカル吉田美和）、玉置浩二「田園」、福山雅治「桜坂」、THE 虎舞竜「ロード」など、心に残るバラードが多数生まれました。"}, {"h": "沖縄発の名曲", "b": "「涙そうそう」は作詞・森山良子、作曲・BEGIN。夏川りみの歌唱で、全国的な大ヒット・ロングヒットになりました。"}, {"h": "ボーカルの区別に注意", "b": "ZARDは坂井泉水、ドリカムは吉田美和、スピッツは草野マサムネ、ミスチルは桜井和寿。ボーカルの取り違えに注意すると、名曲の理解が深まります。"}]}, "artist": {"intro": "昭和・平成を駆け抜けた名アーティストたち。代表曲や意外なつながり、提供曲のエピソードなど、“人”に注目して名曲を楽しみましょう。", "points": [{"h": "サザンオールスターズ", "b": "中心人物は桑田佳祐。デビュー曲「勝手にシンドバッド」（1978年）、バラード「いとしのエリー」（1979年）、「TSUNAMI」など、夏の名曲を数多く生みました。"}, {"h": "中島みゆき", "b": "「時代」「糸」「地上の星」などで知られ、「地上の星」はNHK「プロジェクトX」主題歌としてロングヒット。多くの歌手への楽曲提供でも有名です。"}, {"h": "松任谷由実（ユーミン）", "b": "荒井由実時代に「卒業写真」「ひこうき雲」などを発表。結婚を機に松任谷姓へ。「春よ、来い」（1994年）も代表曲です。"}, {"h": "竹内まりやと山下達郎", "b": "「駅」「元気を出して」の竹内まりやと、「クリスマス・イブ」でシティポップの第一人者とされる山下達郎は夫婦。ともに歌唱と提供で活躍しました。"}, {"h": "テレサ・テン", "b": "台湾出身で、「つぐない」「愛人」「時の流れに身をまかせ」により日本でも国民的人気を獲得。アジア各地で広く愛されました。"}, {"h": "提供曲でつながる才能", "b": "井上陽水が中森明菜へ「飾りじゃないのよ涙は」、布袋寅泰が今井美樹へ「PRIDE」（後に夫婦に）など、作り手と歌い手のつながりも聴きどころです。"}, {"h": "骨太な歌声", "b": "「乾杯」「とんぼ」の長渕剛、アリスの谷村新司（「昴」）、チューリップの財津和夫（「青春の影」）など、個性豊かな歌声が名曲を彩りました。"}]}, "tieup": {"intro": "名曲を後押しした、ドラマ・CMタイアップや音楽賞、そして紅白。曲がヒットした“きっかけ”に注目すると、時代の空気が見えてきます。", "points": [{"h": "日本レコード大賞", "b": "「また逢う日まで」「勝手にしやがれ」「雨の慕情」「TSUNAMI」「innocent world」などが受賞。寺尾聰「ルビーの指環」は、大賞・作曲・編曲・作詩の各賞を独占しました（1981年）。"}, {"h": "ドラマ主題歌", "b": "「贈る言葉」（海援隊、「3年B組金八先生」）、「SAY YES」（「101回目のプロポーズ」）、「TRUE LOVE」（「あすなろ白書」）、「LA・LA・LA LOVE SONG」（「ロングバケーション」）など。"}, {"h": "CMタイアップ", "b": "「異邦人」（家電CM）、「クリスマス・イブ」（鉄道のCMで冬の定番に）、「浪漫飛行」（米米CLUB、航空キャンペーンで再ヒット）、「ワインレッドの心」（飲料CM）など。"}, {"h": "国鉄・旅のうた", "b": "山口百恵「いい日旅立ち」（谷村新司作、国鉄キャンペーン）など、旅情を誘う名曲もタイアップから広まりました。"}, {"h": "再ヒットの物語", "b": "チューリップ「サボテンの花」は、ドラマ「ひとつ屋根の下」（1993年）で再びヒット。時を超えて愛される名曲も少なくありません。"}, {"h": "テレビ音楽番組", "b": "ランキング形式でヒットを生んだTBS「ザ・ベストテン」など、テレビの歌番組が数々の名曲を世に送り出しました。"}, {"h": "紅白歌合戦", "b": "大晦日に放送されるNHK紅白歌合戦は、その年のヒット曲が披露される国民的番組。多くの歌手にとって、出場が大きな目標とされました。"}]}};
+function buildStudyCards(){
+  const grid=document.getElementById('studyGrid');
+  grid.innerHTML='';
+  ORDER.forEach(key=>{
+    const g=QUIZ[key];
+    const n=(STUDY[key]&&STUDY[key].points)?STUDY[key].points.length:0;
+    const card=document.createElement('div');
+    card.className='gcard lcard';
+    card.onclick=()=>showStudyGenre(key);
+    card.innerHTML=`<div class="ji">${g.ji}</div><div class="nm">${g.name}</div><div class="ct">解説 ${n} トピック</div>`;
+    grid.appendChild(card);
+  });
+}
+function openStudy(){ showScreen('study'); }
+function showStudyGenre(key){
+  const g=QUIZ[key]; const d=STUDY[key];
+  document.getElementById('studyJi').textContent=g.ji;
+  document.getElementById('studyName').textContent=g.name;
+  let html='';
+  if(d&&d.intro) html+='<div class="study-intro">'+escapeHtml(d.intro)+'</div>';
+  if(d&&d.points) d.points.forEach((p,i)=>{
+    html+='<div class="lpoint"><div class="lh"><span class="no">'+(i+1)+'</span><span>'+escapeHtml(p.h)+'</span></div><div class="lb">'+escapeHtml(p.b)+'</div></div>';
+  });
+  document.getElementById('studyBody').innerHTML=html;
+  document.getElementById('studyQuizBtn').onclick=()=>openModal(key);
+  showScreen('studyDetail');
+}
+
 buildGenreCards();
+buildStudyCards();
 resizeCanvas();
 drawBg();
 document.getElementById('modalBg').addEventListener('click',e=>{if(e.target.id==='modalBg')closeModal();});
